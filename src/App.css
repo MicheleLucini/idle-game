@@ -1,0 +1,56 @@
+:root {
+  --card-black: #3b3f62;
+  --card-red: #c63949;
+  --card-gold: #c0a465;
+  --card-back: #dcc599;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  font-family: "Josefin Slab", serif;
+  font-size: 20px;
+  color: #263238;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body,
+button {
+  font-family: "Josefin Slab", serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+label {
+  color: #607d8b;
+}
+
+#app {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  min-height: 100vh;
+  width: 100vw;
+  /*min-width: 900px;*/
+  box-sizing: border-box;
+}
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.selectable {
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

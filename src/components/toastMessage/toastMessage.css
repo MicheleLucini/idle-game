@@ -1,0 +1,39 @@
+#toast_message_container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 90;
+  display: grid;
+  grid-gap: 12px;
+}
+
+.toast-message {
+  background-color: #292b2d;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 20px;
+  -webkit-box-shadow: 0 8px 17px 2px rgb(0 0 0 / 14%),
+    0 3px 14px 2px rgb(0 0 0 / 12%), 0 5px 5px -3px rgb(0 0 0 / 20%);
+  box-shadow: 0 8px 17px 2px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%),
+    0 5px 5px -3px rgb(0 0 0 / 20%);
+}
+
+.toast-message.error .icon {
+  background-color: #ef5350;
+  color: #b71c1c;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.toast-message.error .text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 4px;
+}

@@ -1,0 +1,65 @@
+.hand {
+  position: fixed;
+  height: 200px;
+  transform-origin: center;
+
+  --hiddenLenght: 50px;
+}
+.hand .wrapper {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 42px;
+  width: fit-content;
+  margin: auto;
+  padding: 40px 20px;
+  padding-right: 118px;
+  border-radius: 20px;
+}
+.hand .wrapper .player-name {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  line-height: 40px;
+  transform: translate(-50%, 0);
+}
+
+.hand.south {
+  width: 100vw;
+  left: 0;
+  bottom: calc(var(--hiddenLenght) * -1);
+}
+.hand.east {
+  width: 100vh;
+  transform: rotate(270deg);
+  top: calc(50vh - 100px);
+  right: calc(-50vh + 100px + calc(var(--hiddenLenght) * -1));
+}
+.hand.north {
+  width: 100vw;
+  transform: rotate(180deg);
+  left: 0;
+  top: calc(var(--hiddenLenght) * -1);
+}
+.hand.west {
+  width: 100vh;
+  transform: rotate(90deg);
+  top: calc(50vh - 100px);
+  left: calc(-50vh + 100px + calc(var(--hiddenLenght) * -1));
+}
+
+.hand.blue .wrapper {
+  background-color: #e8f0fe;
+  color: #1967d2;
+}
+.hand.red .wrapper {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+.hand.green .wrapper {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+.hand.yellow .wrapper {
+  background-color: #fef7e0;
+  color: #b05a00;
+}

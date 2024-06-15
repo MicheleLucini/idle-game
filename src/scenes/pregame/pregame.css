@@ -1,0 +1,87 @@
+#pregame {
+  z-index: 2;
+  display: grid;
+  gap: 30px;
+  justify-self: center;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  width: 450px;
+  margin: 2rem;
+}
+
+#pregame .lobby-key {
+  font-size: 1.5rem;
+  text-align: center;
+  grid-column: span 2;
+}
+#pregame .lobby-key > span {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  margin-left: 1rem;
+  background-color: #f5f5f5;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+}
+
+#pregame .player {
+  grid-column: span 2;
+  padding: 20px 40px;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 15px;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  -webkit-transition: box-shadow 0.08s linear;
+  transition: box-shadow 0.08s linear;
+}
+
+#pregame .player .icon {
+  font-size: 2.5rem;
+  justify-self: center;
+}
+
+#pregame .player.locked span {
+  opacity: 0.5;
+}
+
+#pregame .player.blue {
+  background-color: #e8f0fe;
+  color: #1967d2;
+}
+#pregame .player.blue:hover {
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px #64b5f6;
+}
+
+#pregame .player.red {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+#pregame .player.red:hover {
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px #e57373;
+}
+
+#pregame .player.green {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+#pregame .player.green:hover {
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px #81c784;
+}
+
+#pregame .player.yellow {
+  background-color: #fef7e0;
+  color: #b05a00;
+}
+#pregame .player.yellow:hover {
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px #ffd54f;
+}
+
+#pregame button {
+  margin-top: 20px;
+}

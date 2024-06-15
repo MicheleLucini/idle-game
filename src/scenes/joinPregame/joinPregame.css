@@ -1,0 +1,18 @@
+#join_pregame {
+  z-index: 2;
+  display: grid;
+  gap: 30px;
+  justify-self: center;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: auto auto;
+  margin: 2rem;
+}
+
+#join_pregame .text-input {
+  grid-column: span 2;
+  display: block;
+  margin: auto;
+  width: 200px;
+}

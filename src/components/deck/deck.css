@@ -1,0 +1,15 @@
+#deck {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 140px;
+  aspect-ratio: 1 / 1.39;
+
+  background-color: #eee;
+  border-radius: 20px;
+}
+#deck .card_back_face {
+  transform: rotateY(0);
+}
