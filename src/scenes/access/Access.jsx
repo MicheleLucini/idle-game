@@ -17,6 +17,11 @@ const Access = ({
   const [password, setPassword] = useState("");
 
   const onAccess = useCallback(async () => {
+    if (!email || !password) {
+      addToastMessage("error", "Email and password are mandatory!");
+      return;
+    }
+
     setLoading(true);
 
     // changeUserName(name);
@@ -31,12 +36,12 @@ const Access = ({
 
     // changeCampaignKey(newGame.key);
 
-    setUser()
+    setUser({ email, password });
 
     setLoading(false);
 
     // changeClientScene(CLIENT_SCENES.LOBBY_PREGAME);
-  }, []);
+  }, [email, password, addToastMessage, setUser]);
 
   return (
     <div id="access">

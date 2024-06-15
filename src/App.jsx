@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect } from "react";
 
 import Background from "./scenes/background";
 import Access from "./scenes/access";
+import Game from "./scenes/game";
 // import Pregame from "./scenes/pregame";
 // import JoinPregame from "./scenes/joinPregame";
-// import Game from "./scenes/game";
 
 import { Cursor } from "./components/cursor";
 import ToastMessageContainer from "./components/toastMessage";
@@ -144,6 +144,13 @@ const App = () => {
           setUser={setUser}
         />
       )}
+      {user && (
+        <Game
+          addToastMessage={addToastMessage}
+          setUser={setUser}
+        />
+      )}
+
       {/* {CLIENT_SCENES.MENU === clientData.clientScene && (
         <Menu
           clientData={clientData}
