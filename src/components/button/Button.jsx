@@ -34,13 +34,4 @@ Button.propTypes = {
   disabled: PropTypes.bool,
 };
 
-Button.defaultProps = {
-  id: "",
-  text: null,
-  icon: null,
-  size: null,
-  onClick: () => {},
-  disabled: false,
-};
-
 export default Button;

@@ -22,6 +22,4 @@ ToastMessageContainer.propTypes = {
   messages: PropTypes.array.isRequired,
 };
 
-ToastMessageContainer.defaultProps = {};
-
 export default ToastMessageContainer;

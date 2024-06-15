@@ -16,8 +16,4 @@ Background.propTypes = {
   gamePhase: PropTypes.string,
 };
 
-Background.defaultProps = {
-  gamePhase: null,
-};
-
 export default Background;

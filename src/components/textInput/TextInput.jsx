@@ -10,6 +10,7 @@ const TextInput = ({
   placeholder,
   disabled,
   onKeyPressEnter,
+  type = "text",
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -34,12 +35,12 @@ const TextInput = ({
   return (
     <div
       className={
-        "text-input" + (isActive ? " active" : "") + (!!value ? " filled" : "")+ (disabled ? " disabled" : "")
+        "text-input" + (isActive ? " active" : "") + (!!value ? " filled" : "") + (disabled ? " disabled" : "")
       }
     >
       <label>{label}</label>
       <input
-        type="text"
+        type={type}
         value={value}
         onChange={onChange}
         // validate={validate}
@@ -63,15 +64,6 @@ TextInput.propTypes = {
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
   onKeyPressEnter: PropTypes.func,
-};
-
-TextInput.defaultProps = {
-  label: null,
-  value: null,
-  // validate: () => {},
-  placeholder: null,
-  disabled: false,
-  onKeyPressEnter: null,
 };
 
 export default TextInput;
