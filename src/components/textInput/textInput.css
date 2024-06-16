@@ -65,7 +65,7 @@
   z-index: 2;
   color: #78909c;
   font-weight: 600;
-  transform: translate(31px, 30px);
+  transform: translate(31px, 32px);
   transform-origin: top left;
   -webkit-transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);

@@ -1,16 +1,50 @@
-import React, { useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./cursor.css";
 
-const Cursor = ({
-  cursorData,
-  changeCursorX,
-  changeCursorY,
-  changeCursorHide,
-  changeCursorUp,
-  changeCursorDown,
-  viewport,
-}) => {
+const Cursor = ({ }) => {
+  const [clientCursor, setClientCursor] = useState({
+    x: 0,
+    y: 0,
+    mouseUp: false,
+    mouseDown: false,
+    hide: true,
+    text: "",
+  });
+
+  const changeCursorX = useCallback((newValue) => {
+    setClientCursor((prev) => ({
+      ...prev,
+      x: newValue,
+      hide: false,
+    }));
+  }, []);
+  const changeCursorY = useCallback((newValue) => {
+    setClientCursor((prev) => ({
+      ...prev,
+      y: newValue,
+      hide: false,
+    }));
+  }, []);
+  const changeCursorUp = useCallback((newValue) => {
+    setClientCursor((prev) => ({
+      ...prev,
+      mouseUp: newValue,
+    }));
+  }, []);
+  const changeCursorDown = useCallback((newValue) => {
+    setClientCursor((prev) => ({
+      ...prev,
+      mouseDown: newValue,
+    }));
+  }, []);
+  const changeCursorHide = useCallback((newValue) => {
+    setClientCursor((prev) => ({
+      ...prev,
+      hide: newValue,
+    }));
+  }, []);
+
   // const cursorColor = useMemo(() => {
   //   switch (playerId) {
   //     case "playerBlue":
@@ -34,20 +68,20 @@ const Cursor = ({
   const cursorClass = useMemo(() => (
     [
       "cursor",
-      cursorData.hide ? "hidden" : null,
-      cursorData.mouseDown ? "down" : null,
-      cursorData.mouseUp ? "up" : null,
+      clientCursor.hide ? "hidden" : null,
+      clientCursor.mouseDown ? "down" : null,
+      clientCursor.mouseUp ? "up" : null,
       // cursorColor,
     ]
       .filter((x) => !!x)
       .join(" ")
-  ), [cursorData.hide, cursorData.mouseDown, cursorData.mouseUp]);
+  ), [clientCursor.hide, clientCursor.mouseDown, clientCursor.mouseUp]);
 
   const handleMouseMove = useCallback((event) => {
     const e = event || window.event;
     changeCursorX(e.x);
     changeCursorY(e.y);
-  }, [changeCursorX, changeCursorY, viewport]);
+  }, [changeCursorX, changeCursorY]);
 
   const handleMouseEnter = useCallback(() => {
     changeCursorHide(false);
@@ -93,22 +127,15 @@ const Cursor = ({
     <div
       className={cursorClass}
       style={{
-        transform: "translate(" + cursorData.x + "px, " + cursorData.y + "px)",
+        transform: "translate(" + clientCursor.x + "px, " + clientCursor.y + "px)",
       }}
     >
       <div className="goccia"></div>
-      <div className="text">{cursorData.text}</div>
+      <div className="text">{clientCursor.text}</div>
     </div>
   );
 };
 
-Cursor.propTypes = {
-  cursorData: PropTypes.object.isRequired,
-  changeCursorX: PropTypes.func.isRequired,
-  changeCursorY: PropTypes.func.isRequired,
-  changeCursorUp: PropTypes.func.isRequired,
-  changeCursorDown: PropTypes.func.isRequired,
-  changeCursorHide: PropTypes.func.isRequired,
-};
+Cursor.propTypes = {};
 
 export default Cursor;

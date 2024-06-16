@@ -13,7 +13,7 @@ import { uuidv4 } from "./logic/utility";
 import "./App.css";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const [gameData, setGameData] = useState(null);
 
   // TOAST MESSAGES ##########################################
 
@@ -31,134 +31,26 @@ const App = () => {
     setTimeout(() => deleteToastMessage(id), 3000);
   }, [deleteToastMessage]);
 
-  // CLIENT CURSOR ##########################################
-
-  const [clientCursor, setClientCursor] = useState({
-    x: 0,
-    y: 0,
-    mouseUp: false,
-    mouseDown: false,
-    hide: true,
-    text: "",
-  });
-
-  const changeCursorX = useCallback((newValue) => {
-    setClientCursor((prev) => ({
-      ...prev,
-      x: newValue,
-      hide: false,
-    }));
-  }, []);
-  const changeCursorY = useCallback((newValue) => {
-    setClientCursor((prev) => ({
-      ...prev,
-      y: newValue,
-      hide: false,
-    }));
-  }, []);
-  const changeCursorUp = useCallback((newValue) => {
-    setClientCursor((prev) => ({
-      ...prev,
-      mouseUp: newValue,
-    }));
-  }, []);
-  const changeCursorDown = useCallback((newValue) => {
-    setClientCursor((prev) => ({
-      ...prev,
-      mouseDown: newValue,
-    }));
-  }, []);
-  const changeCursorHide = useCallback((newValue) => {
-    setClientCursor((prev) => ({
-      ...prev,
-      hide: newValue,
-    }));
-  }, []);
-
-  // GAME DATA ##########################################
-
-  // const [gameData, setGameData] = useState(null);
-
-  // const leaveCampaignApp = useCallback(() => {
-  //   leaveCampaign(
-  //     clientData.campaignKey,
-  //     clientData.deviceId,
-  //     clientData.playerId
-  //   );
-  //   softResetClientData();
-  //   setGameData(null);
-  // }, [
-  //   clientData.campaignKey,
-  //   clientData.deviceId,
-  //   clientData.playerId,
-  //   softResetClientData,
-  // ]);
-
-  // const mergeGameData = useCallback(
-  //   (newValue) => {
-  //     if (newValue?.deleted === true) {
-  //       leaveCampaignApp();
-  //       return;
-  //     }
-  //     setGameData((prev) => ({
-  //       ...prev,
-  //       ...newValue,
-  //     }));
-  //   },
-  //   [leaveCampaignApp]
-  // );
-
-  // VIEWPORT ##########################################
-
-  // const [viewport, setViewport] = useState({
-  //   height: window.innerHeight,
-  //   width: window.innerWidth,
-  // });
-
-  // const handleResize = useCallback(
-  //   () => setViewport({ height: window.innerHeight, width: window.innerWidth }),
-  //   []
-  // );
-
-  // useEffect(() => {
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, [handleResize]);
-
-  // EFFETTI ##########################################
-
-  // useEffect(() => {
-  //   console.log("gameData changed: ", { ...gameData });
-  // }, [gameData]);
 
   return (
     <>
       <Background />
-      {!user && (
+      {!gameData && (
         <Access
           addToastMessage={addToastMessage}
-          setUser={setUser}
+          setGameData={setGameData}
         />
       )}
-      {user && (
+      {gameData && (
         <Game
           addToastMessage={addToastMessage}
-          setUser={setUser}
+          setGameData={setGameData}
         />
       )}
 
       <ToastMessageContainer messages={toastMessages} />
 
-      {clientCursor && (
-        <Cursor
-          cursorData={clientCursor}
-          changeCursorX={changeCursorX}
-          changeCursorY={changeCursorY}
-          changeCursorUp={changeCursorUp}
-          changeCursorDown={changeCursorDown}
-          changeCursorHide={changeCursorHide}
-        />
-      )}
+      <Cursor />
     </>
   );
 };
