@@ -1,33 +1,40 @@
-// Synchronous
+import moment from 'moment';
 
-export const lsSet = (key, value) => {
-  return localStorage.setItem("pig_" + key, JSON.stringify(value));
-};
+function getStorageKey(tag, key) {
+  var sName = "penitentrealms_" + tag + "_" + key;
+  return sName.toLowerCase();
+}
 
-export const lsGet = (key, value) => {
-  return JSON.parse(localStorage.getItem("pig_" + key));
-};
+export function setLocal(tag, key, data, expirySeconds) {
+  if (!expirySeconds || expirySeconds <= 0) {
+    expirySeconds = 365 * 24 * 60 * 60;
+  }
 
-export const lsRemove = (key) => {
-  return localStorage.removeItem("pig_" + key);
-};
+  var objLS = {
+    creation: moment().format(),
+    expiration: moment().add(expirySeconds, 'seconds').format(),
+    data: data
+  };
 
-// // Asynchronous
+  localStorage.setItem(getStorageKey(tag, key), JSON.stringify(objLS));
+}
 
-// export const alsSet = (key, value) => {
-//   return new Promise((resolve) => {
-//     resolve(lsSet(key, value));
-//   });
-// };
+export function getLocal(tag, key) {
+  var objLS = JSON.parse(localStorage.getItem(getStorageKey(tag, key)));
 
-// export const alsGet = (key, value) => {
-//   return new Promise((resolve) => {
-//     resolve(lsGet(key));
-//   });
-// };
+  if (!objLS)
+    return;
 
-// export const alsRemove = (key) => {
-//   return new Promise((resolve) => {
-//     resolve(lsRemove(key));
-//   });
-// };
+  // Expiration
+  if (moment(objLS.expiration).isBefore(moment())) {
+    delLocal(tag, key);
+    return;
+  }
+
+  return objLS.data;
+}
+
+export function delLocal(tag, key) {
+  localStorage.removeItem(getStorageKey(tag, key));
+}
+

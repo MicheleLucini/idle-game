@@ -5,6 +5,10 @@
   --card-back: #dcc599;
 }
 
+/* iframe {
+  display: none;
+} */
+
 body {
   margin: 0;
   padding: 0;
@@ -46,6 +50,7 @@ label {
   -ms-user-select: none;
   user-select: none;
 }
+
 .selectable {
   -webkit-touch-callout: text;
   -webkit-user-select: text;

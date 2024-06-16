@@ -3,16 +3,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import Background from "./scenes/background";
 import Access from "./scenes/access";
 import Game from "./scenes/game";
-// import Pregame from "./scenes/pregame";
-// import JoinPregame from "./scenes/joinPregame";
 
-import { Cursor } from "./components/cursor";
 import ToastMessageContainer from "./components/toastMessage";
+import { Cursor } from "./components/cursor";
 
-import { appVersion, CLIENT_SCENES, LSKEY } from "./logic/constants";
-// import { updateMyPlayer, leaveCampaign } from "./logic/campaign";
+import { appVersion, LSKEY } from "./logic/constants";
 import { uuidv4 } from "./logic/utility";
-import { lsGet, alsSet } from "./logic/storage";
 
 import "./App.css";
 
@@ -150,44 +146,6 @@ const App = () => {
           setUser={setUser}
         />
       )}
-
-      {/* {CLIENT_SCENES.MENU === clientData.clientScene && (
-        <Menu
-          clientData={clientData}
-          changeUserName={changeUserName}
-          changeCampaignKey={changeCampaignKey}
-          changeClientScene={changeClientScene}
-          leaveCampaignApp={leaveCampaignApp}
-          mergeGameData={mergeGameData}
-          addToastMessage={addToastMessage}
-        />
-      )}
-      {CLIENT_SCENES.LOBBY_PREGAME === clientData.clientScene && (
-        <Pregame
-          clientData={clientData}
-          gameData={gameData}
-          changePlayerId={changePlayerId}
-          changeClientScene={changeClientScene}
-          addToastMessage={addToastMessage}
-        />
-      )}
-      {CLIENT_SCENES.JOIN_LOBBY_PREGAME === clientData.clientScene && (
-        <JoinPregame
-          clientData={clientData}
-          changeCampaignKey={changeCampaignKey}
-          changeClientScene={changeClientScene}
-          mergeGameData={mergeGameData}
-          addToastMessage={addToastMessage}
-        />
-      )}
-      {CLIENT_SCENES.GAME === clientData.clientScene && (
-        <Game
-          clientData={clientData}
-          gameData={gameData}
-          leaveCampaignApp={leaveCampaignApp}
-          onMyHandCardClick={onMyHandCardClick}
-        />
-      )} */}
 
       <ToastMessageContainer messages={toastMessages} />
 
