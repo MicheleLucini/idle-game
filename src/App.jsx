@@ -44,6 +44,7 @@ const App = () => {
       {gameData && (
         <Game
           addToastMessage={addToastMessage}
+          gameData={gameData}
           setGameData={setGameData}
         />
       )}

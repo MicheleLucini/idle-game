@@ -8,29 +8,32 @@ import "./game.css";
 
 const Game = ({
   addToastMessage,
-  setUser,
+  gameData,
+  setGameData,
 }) => {
   const onLogout = useCallback(() => {
-    setUser(null);
-  }, [setUser]);
+    setGameData(null);
+  }, [setGameData]);
 
   return (
     <div id="game">
       <GameMap />
-      <Button
-        id="leave_btn"
-        text="Logout"
-        icon="close"
-        onClick={onLogout}
-        size="small"
-      />
+      <div id="user_data">
+        <span>{JSON.stringify(gameData, null, 2)}</span>
+        <Button
+          text="Logout"
+          icon="close"
+          onClick={onLogout}
+          size="small"
+        />
+      </div>
     </div>
   );
 };
 
 Game.propTypes = {
   addToastMessage: PropTypes.func.isRequired,
-  setUser: PropTypes.func.isRequired,
+  setGameData: PropTypes.func.isRequired,
 };
 
 export default Game;
