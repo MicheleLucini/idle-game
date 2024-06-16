@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import Button from "../../components/button";
 
+import GameMap from './GameMap.jsx';
 import "./game.css";
 
 const Game = ({
@@ -15,6 +16,7 @@ const Game = ({
 
   return (
     <div id="game">
+      <GameMap />
       <Button
         id="leave_btn"
         text="Logout"
@@ -30,7 +32,5 @@ Game.propTypes = {
   addToastMessage: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired,
 };
-
-Game.defaultProps = {};
 
 export default Game;
