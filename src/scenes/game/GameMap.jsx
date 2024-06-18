@@ -41,10 +41,13 @@ const GameMap = ({
   };
 
   useEffect(() => {
-    containerRef.current.scrollLeft =
-      MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX - (window.innerWidth / 2);
-    containerRef.current.scrollTop =
-      MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX - (window.innerHeight / 2);
+    const startingTile = {
+      x: MAP_DIAMETER_TILES * -1,
+      y: MAP_DIAMETER_TILES,
+    };
+    const firstSettlement = gameData.userSettlements[0];
+    containerRef.current.scrollTop = ((startingTile.y - firstSettlement.y) * TILE_DIMENSIONS_PX) - (window.innerHeight / 2);
+    containerRef.current.scrollLeft = (((startingTile.x + (firstSettlement.x * -1)) * TILE_DIMENSIONS_PX) * -1) - (window.innerWidth / 2);
   }, []);
 
   return (
