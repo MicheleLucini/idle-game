@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/idle-game/static/css/main.8416a1ff.css",
+    "main.js": "/idle-game/static/js/main.ea31f396.js",
+    "index.html": "/idle-game/index.html",
+    "main.8416a1ff.css.map": "/idle-game/static/css/main.8416a1ff.css.map",
+    "main.ea31f396.js.map": "/idle-game/static/js/main.ea31f396.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8416a1ff.css",
+    "static/js/main.ea31f396.js"
+  ]
+}
