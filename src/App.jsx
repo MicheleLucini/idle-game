@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 
 import Background from "./scenes/background";
 import Access from "./scenes/access";
@@ -7,7 +7,6 @@ import Game from "./scenes/game";
 import ToastMessageContainer from "./components/toastMessage";
 import { Cursor } from "./components/cursor";
 
-import { appVersion, LSKEY } from "./logic/constants";
 import { uuidv4 } from "./logic/utility";
 
 import "./App.css";
