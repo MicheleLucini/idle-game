@@ -25,6 +25,7 @@ const Game = ({
       <GameMap
         TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
         MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
+        gameData={gameData}
       />
       <div id="user_data">
         <span>{JSON.stringify(gameData, null, 2)}</span>

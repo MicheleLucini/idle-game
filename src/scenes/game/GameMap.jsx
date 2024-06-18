@@ -1,11 +1,13 @@
 import React, { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import Settlement from "./Settlement.jsx";
 import "./gameMap.css";
 
 const GameMap = ({
   TILE_DIMENSIONS_PX,
   MAP_DIAMETER_TILES,
+  gameData,
 }) => {
   const containerRef = useRef(null);
 
@@ -61,8 +63,23 @@ const GameMap = ({
           left: MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX,
           height: TILE_DIMENSIONS_PX,
           width: TILE_DIMENSIONS_PX,
-          backgroundColor: "olive",
+          backgroundColor: "grey",
         }} />
+        {gameData.userSettlements.map((x) => (
+          <Settlement
+            MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
+            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
+            key={x.x + "," + x.y} data={x}
+            isMine
+          />
+        ))}
+        {gameData.visibleSettlements.map((x) => (
+          <Settlement
+            MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
+            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
+            key={x.x + "," + x.y} data={x}
+          />
+        ))}
       </div>
     </div>
   );
