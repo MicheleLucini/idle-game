@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import { RestoreSignIn } from "../../api/user";
 import { SignIn, Register } from "../../api/public";
 
 import Button from "../../components/button";
 import TextInput from "../../components/textInput";
 
 import { appVersion } from "../../logic/constants";
+import { getLocal, setLocal } from "../../logic/storage";
 
 import "./access.css";
 
@@ -14,7 +16,7 @@ const Access = ({
   addToastMessage,
   setGameData,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +27,7 @@ const Access = ({
     }
     setLoading(true);
     const data = await SignIn({ email, password }, addToastMessage);
+    setLocal("user", "token", { token: data.token, id: data.id });
     setGameData(data);
     setLoading(false);
   }, [email, password, addToastMessage, setGameData]);
@@ -43,6 +46,18 @@ const Access = ({
     }
     onSignIn();
   }, [email, password, addToastMessage, setGameData]);
+
+  useEffect(() => {
+    const userToken = getLocal("user", "token");
+    if (!userToken) {
+      setLoading(false);
+      return;
+    }
+    RestoreSignIn()
+      .then((data) => setGameData(data))
+      .finally(() => setLoading(false));
+  }, []);
+
 
   return (
     <div id="access">
