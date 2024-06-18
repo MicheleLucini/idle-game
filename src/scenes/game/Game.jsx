@@ -2,9 +2,13 @@ import React, { useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 
 import Button from "../../components/button";
+import { delLocal } from "../../logic/storage";
 
 import GameMap from './GameMap.jsx';
 import "./game.css";
+
+const TILE_DIMENSIONS_PX = 60;
+const MAP_DIAMETER_TILES = 100;
 
 const Game = ({
   addToastMessage,
@@ -12,12 +16,16 @@ const Game = ({
   setGameData,
 }) => {
   const onLogout = useCallback(() => {
+    delLocal("user", "token");
     setGameData(null);
   }, [setGameData]);
 
   return (
     <div id="game">
-      <GameMap />
+      <GameMap
+        TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
+        MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
+      />
       <div id="user_data">
         <span>{JSON.stringify(gameData, null, 2)}</span>
         <Button
