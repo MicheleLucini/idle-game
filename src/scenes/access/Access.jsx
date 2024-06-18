@@ -26,7 +26,13 @@ const Access = ({
       return;
     }
     setLoading(true);
-    const data = await SignIn({ email, password }, addToastMessage);
+    let data;
+    try {
+      data = await SignIn({ email, password }, addToastMessage);
+    } catch {
+      setLoading(false);
+      return;
+    }
     setLocal("user", "token", { token: data.token, id: data.id });
     setGameData(data);
     setLoading(false);

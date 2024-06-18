@@ -34,6 +34,7 @@ const App = () => {
   return (
     <>
       <Background />
+
       {!gameData && (
         <Access
           addToastMessage={addToastMessage}
