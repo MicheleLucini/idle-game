@@ -79,7 +79,6 @@ const GameMap = ({
             key={x.x + "," + x.y} data={x}
             selectedSettlement={selectedSettlement}
             setSelectedSettlement={setSelectedSettlement}
-            isMine
           />
         ))}
         {gameData.visibleSettlements.map((x) => (

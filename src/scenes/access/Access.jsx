@@ -13,7 +13,7 @@ import "./access.css";
 
 const Access = ({
   addToastMessage,
-  setGameData,
+  mapGameData,
 }) => {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ const Access = ({
       return;
     }
     setLocal("user", "token", { token: data.token, id: data.id });
-    setGameData(data);
+    mapGameData(data);
     setLoading(false);
   };
 
@@ -59,7 +59,7 @@ const Access = ({
       return;
     }
     RestoreSignIn()
-      .then((data) => setGameData(data))
+      .then((data) => mapGameData(data))
       .finally(() => setLoading(false));
   }, []);
 

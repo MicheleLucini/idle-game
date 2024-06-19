@@ -14,6 +14,19 @@ import "./App.css";
 const App = () => {
   const [gameData, setGameData] = useState(null);
 
+  const mapGameData = (data) => {
+    const mappedData = {
+      ...data,
+      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true }),)
+    };
+    console.log(mappedData)
+    setGameData(mappedData);
+  };
+
+  const onLogout = () => {
+    setGameData(null);
+  };
+
   // TOAST MESSAGES ##########################################
 
   const [toastMessages, setToastMessages] = useState([]);
@@ -30,6 +43,7 @@ const App = () => {
     setTimeout(() => deleteToastMessage(id), 3000);
   };
 
+  // RENDER ##########################################
 
   return (
     <>
@@ -38,14 +52,14 @@ const App = () => {
       {!gameData && (
         <Access
           addToastMessage={addToastMessage}
-          setGameData={setGameData}
+          mapGameData={mapGameData}
         />
       )}
       {gameData && (
         <Game
           addToastMessage={addToastMessage}
           gameData={gameData}
-          setGameData={setGameData}
+          onLogout={onLogout}
         />
       )}
 

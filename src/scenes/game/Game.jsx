@@ -12,13 +12,13 @@ const MAP_DIAMETER_TILES = 100;
 const Game = ({
   addToastMessage,
   gameData,
-  setGameData,
+  onLogout,
 }) => {
   const [selectedSettlement, setSelectedSettlement] = useState(null);
 
-  const onLogout = () => {
+  const onLogoutClick = () => {
     delLocal("user", "token");
-    setGameData(null);
+    onLogout(null);
   };
 
   return (
@@ -35,10 +35,34 @@ const Game = ({
         <Button
           text="Logout"
           icon="close"
-          onClick={onLogout}
+          onClick={onLogoutClick}
           size="small"
         />
       </div>
+      {selectedSettlement && (
+        <div id="selected_settlement">
+          <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+          <Button
+            // onClick={onLogout}
+            disabled={!selectedSettlement.isMine}
+            icon="upgrade"
+            size="small"
+            text="Upgrade"
+          />
+          <Button
+            // onClick={onLogout}
+            disabled={!selectedSettlement.isMine}
+            icon="east"
+            size="small"
+            text="Move troops"
+          />
+          <Button
+            icon="close"
+            onClick={() => setSelectedSettlement(null)}
+            size="small"
+          />
+        </div>
+      )}
     </div>
   );
 };
