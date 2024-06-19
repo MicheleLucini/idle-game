@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import Settlement from "./Settlement.jsx";
 import "./gameMap.css";
@@ -8,6 +7,8 @@ const GameMap = ({
   TILE_DIMENSIONS_PX,
   MAP_DIAMETER_TILES,
   gameData,
+  selectedSettlement,
+  setSelectedSettlement,
 }) => {
   const containerRef = useRef(null);
 
@@ -76,6 +77,8 @@ const GameMap = ({
             MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             key={x.x + "," + x.y} data={x}
+            selectedSettlement={selectedSettlement}
+            setSelectedSettlement={setSelectedSettlement}
             isMine
           />
         ))}
@@ -84,16 +87,13 @@ const GameMap = ({
             MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             key={x.x + "," + x.y} data={x}
+            selectedSettlement={selectedSettlement}
+            setSelectedSettlement={setSelectedSettlement}
           />
         ))}
       </div>
     </div>
   );
-};
-
-GameMap.propTypes = {
-  TILE_DIMENSIONS_PX: PropTypes.number,
-  MAP_DIAMETER_TILES: PropTypes.number,
 };
 
 export default GameMap;

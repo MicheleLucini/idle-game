@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import { RestoreSignIn } from "../../api/user";
 import { SignIn, Register } from "../../api/public";
@@ -94,11 +93,6 @@ const Access = ({
       <span className="version">{appVersion}</span>
     </div>
   );
-};
-
-Access.propTypes = {
-  addToastMessage: PropTypes.func.isRequired,
-  setGameData: PropTypes.func.isRequired,
 };
 
 export default Access;

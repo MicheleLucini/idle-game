@@ -1,19 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import "./background.css";
 
-const Background = ({ gamePhase }) => {
+const Background = () => {
   return (
     <div id="bg">
       <div className="noise"></div>
-      {/* <div></div> */}
     </div>
   );
 };
 
-Background.propTypes = {
-  gamePhase: PropTypes.string,
-};
 
 export default Background;

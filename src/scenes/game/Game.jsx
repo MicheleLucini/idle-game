@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 
 import Button from "../../components/button";
 import { delLocal } from "../../logic/storage";
@@ -15,6 +14,8 @@ const Game = ({
   gameData,
   setGameData,
 }) => {
+  const [selectedSettlement, setSelectedSettlement] = useState(null);
+
   const onLogout = () => {
     delLocal("user", "token");
     setGameData(null);
@@ -26,6 +27,8 @@ const Game = ({
         TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
         MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
         gameData={gameData}
+        selectedSettlement={selectedSettlement}
+        setSelectedSettlement={setSelectedSettlement}
       />
       <div id="user_data">
         <span>{JSON.stringify(gameData, null, 2)}</span>
@@ -38,11 +41,6 @@ const Game = ({
       </div>
     </div>
   );
-};
-
-Game.propTypes = {
-  addToastMessage: PropTypes.func.isRequired,
-  setGameData: PropTypes.func.isRequired,
 };
 
 export default Game;
