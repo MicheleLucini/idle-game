@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useCallback, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import Settlement from "./Settlement.jsx";
@@ -15,10 +15,13 @@ const GameMap = ({
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
 
-  const mapStyle = useMemo(() => ({
-    height: TILE_DIMENSIONS_PX * (MAP_DIAMETER_TILES * 2 + 1),
-    width: TILE_DIMENSIONS_PX * (MAP_DIAMETER_TILES * 2 + 1),
-  }), [TILE_DIMENSIONS_PX, MAP_DIAMETER_TILES]);
+  const mapStyle = () => {
+    const mapSide = TILE_DIMENSIONS_PX * (MAP_DIAMETER_TILES * 2 + 1);
+    return {
+      height: mapSide + "px",
+      width: mapSide + "px",
+    };
+  };
 
   const handleMouseDown = (event) => {
     const e = event || window.event;
@@ -59,13 +62,13 @@ const GameMap = ({
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <div id="map" style={mapStyle}>
+      <div id="map" style={mapStyle()}>
         <div style={{
           position: "absolute",
-          top: MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX,
-          left: MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX,
-          height: TILE_DIMENSIONS_PX,
-          width: TILE_DIMENSIONS_PX,
+          top: (MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX) + "px",
+          left: (MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX) + "px",
+          height: TILE_DIMENSIONS_PX + "px",
+          width: TILE_DIMENSIONS_PX + "px",
           backgroundColor: "grey",
         }} />
         {gameData.userSettlements.map((x) => (

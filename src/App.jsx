@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 
 import Background from "./scenes/background";
 import Access from "./scenes/access";
@@ -18,17 +18,17 @@ const App = () => {
 
   const [toastMessages, setToastMessages] = useState([]);
 
-  const deleteToastMessage = useCallback((id) => {
+  const deleteToastMessage = (id) => {
     setToastMessages((prev) =>
       prev.filter((toastMessage) => toastMessage.id !== id)
     );
-  }, []);
+  };
 
-  const addToastMessage = useCallback((type, text) => {
+  const addToastMessage = (type, text) => {
     let id = uuidv4();
     setToastMessages((prev) => [...prev, { id, type, text }]);
     setTimeout(() => deleteToastMessage(id), 3000);
-  }, [deleteToastMessage]);
+  };
 
 
   return (

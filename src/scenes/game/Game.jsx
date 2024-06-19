@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import Button from "../../components/button";
@@ -15,10 +15,10 @@ const Game = ({
   gameData,
   setGameData,
 }) => {
-  const onLogout = useCallback(() => {
+  const onLogout = () => {
     delLocal("user", "token");
     setGameData(null);
-  }, [setGameData]);
+  };
 
   return (
     <div id="game">

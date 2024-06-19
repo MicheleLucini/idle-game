@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { RestoreSignIn } from "../../api/user";
@@ -20,7 +20,7 @@ const Access = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onSignIn = useCallback(async () => {
+  const onSignIn = async () => {
     if (!email || !password) {
       addToastMessage("error", "Email and password are mandatory!");
       return;
@@ -36,9 +36,9 @@ const Access = ({
     setLocal("user", "token", { token: data.token, id: data.id });
     setGameData(data);
     setLoading(false);
-  }, [email, password, addToastMessage, setGameData]);
+  };
 
-  const onRegister = useCallback(async () => {
+  const onRegister = async () => {
     if (!email || !password) {
       addToastMessage("error", "Email and password are mandatory!");
       return;
@@ -51,7 +51,7 @@ const Access = ({
       return;
     }
     onSignIn();
-  }, [email, password, addToastMessage, setGameData]);
+  };
 
   useEffect(() => {
     const userToken = getLocal("user", "token");
@@ -63,7 +63,6 @@ const Access = ({
       .then((data) => setGameData(data))
       .finally(() => setLoading(false));
   }, []);
-
 
   return (
     <div id="access">
