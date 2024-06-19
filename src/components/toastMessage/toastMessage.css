@@ -21,9 +21,7 @@
     0 5px 5px -3px rgb(0 0 0 / 20%);
 }
 
-.toast-message.error .icon {
-  background-color: #ef5350;
-  color: #b71c1c;
+.toast-message .icon {
   border-radius: 50%;
   width: 26px;
   height: 26px;
@@ -32,8 +30,18 @@
   font-size: 1.2rem;
 }
 
-.toast-message.error .text {
+.toast-message .text {
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 4px;
+}
+
+.toast-message.error .icon {
+  background-color: #ef5350;
+  color: #b71c1c;
+}
+
+.toast-message.success .icon {
+  background-color: #66bb6a;
+  color: #1b5e20;
 }

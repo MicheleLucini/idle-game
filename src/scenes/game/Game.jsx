@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { UpgradeSettlement } from "../../api/user";
+
 import Button from "../../components/button";
 import { delLocal } from "../../logic/storage";
 
@@ -19,6 +21,12 @@ const Game = ({
   const onLogoutClick = () => {
     delLocal("user", "token");
     onLogout(null);
+  };
+
+  const onUpgradeClick = () => {
+    UpgradeSettlement({ x: selectedSettlement.x, y: selectedSettlement.y }, addToastMessage)
+      .then(() => addToastMessage("success", "Upgraded!"))
+      .catch(() => { });
   };
 
   return (
@@ -43,9 +51,9 @@ const Game = ({
         <div id="selected_settlement">
           <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
           <Button
-            // onClick={onLogout}
             disabled={!selectedSettlement.isMine}
             icon="upgrade"
+            onClick={onUpgradeClick}
             size="small"
             text="Upgrade"
           />

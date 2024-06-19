@@ -58,7 +58,7 @@ const Access = ({
       setLoading(false);
       return;
     }
-    RestoreSignIn()
+    RestoreSignIn(addToastMessage)
       .then((data) => mapGameData(data))
       .finally(() => setLoading(false));
   }, []);
