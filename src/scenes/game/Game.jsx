@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { UpgradeSettlement } from "../../api/user";
+import { UpgradeSettlement, MoveTroops } from "../../api/user";
 
 import Button from "../../components/button";
 import { delLocal } from "../../logic/storage";
@@ -17,6 +17,7 @@ const Game = ({
   onLogout,
 }) => {
   const [selectedSettlement, setSelectedSettlement] = useState(null);
+  const [modalMoveTroops, setModalMoveTroops] = useState(null);
 
   const onLogoutClick = () => {
     delLocal("user", "token");
@@ -29,15 +30,15 @@ const Game = ({
       .catch(() => { });
   };
 
-  const onMoveTroopsClick = () => {
-    // MoveTroops({
-    //   sourceX,
-    //   sourceY,
-    //   destinationX,
-    //   destinationY,
-    //   amount,
-    // }, addToastMessage)
-    //   .catch(() => { });
+  const onMoveTroopsClick = (fromSettlement) => {
+    MoveTroops({
+      sourceX: fromSettlement.x,
+      sourceY: fromSettlement.y,
+      destinationX: selectedSettlement.x,
+      destinationY: selectedSettlement.y,
+      amount: fromSettlement.troopAmount,
+    }, addToastMessage)
+      .catch(() => { });
   };
 
   return (
@@ -69,16 +70,33 @@ const Game = ({
             text="Upgrade"
           />
           <Button
-            disabled={!selectedSettlement.isMine}
             icon="east"
-            onClick={onMoveTroopsClick}
+            onClick={() => setModalMoveTroops({})}
             size="small"
-            text="Move troops"
+            text={selectedSettlement.isMine ? "Move troops" : "Attack"}
           />
           <Button
             icon="close"
             onClick={() => setSelectedSettlement(null)}
             size="small"
+          />
+        </div>
+      )}
+      {modalMoveTroops && (
+        <div id="modal_move_troops">
+          <h3>Move troops</h3>
+          {gameData.userSettlements.map((x) => (
+            <Button
+              onClick={() => onMoveTroopsClick(x)}
+              size="small"
+              text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
+            />
+          ))}
+          <Button
+            icon="close"
+            onClick={() => setModalMoveTroops(null)}
+            size="small"
+            text="Cancel"
           />
         </div>
       )}
