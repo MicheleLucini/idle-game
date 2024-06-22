@@ -60,6 +60,7 @@ const App = () => {
           addToastMessage={addToastMessage}
           gameData={gameData}
           onLogout={onLogout}
+          mapGameData={mapGameData}
         />
       )}
 

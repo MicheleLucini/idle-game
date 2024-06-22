@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
+import MovingTroop from "./MovingTroop.jsx";
 import Settlement from "./Settlement.jsx";
 import "./gameMap.css";
 
@@ -7,6 +8,7 @@ const GameMap = ({
   MAP_MARGIN_TILES,
   TILE_DIMENSIONS_PX,
   gameData,
+  movements,
   selectedSettlement,
   setSelectedSettlement,
 }) => {
@@ -16,10 +18,10 @@ const GameMap = ({
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
-  const minMapX = Math.min(gameData.userSettlements.map((x) => x.x)) - MAP_MARGIN_TILES;
-  const maxMapX = Math.max(gameData.userSettlements.map((x) => x.x)) + MAP_MARGIN_TILES + 1;
-  const minMapY = Math.min(gameData.userSettlements.map((x) => x.y)) - MAP_MARGIN_TILES - 1;
-  const maxMapY = Math.max(gameData.userSettlements.map((x) => x.y)) + MAP_MARGIN_TILES;
+  const minMapX = Math.min(...gameData.userSettlements.map((x) => x.x)) - MAP_MARGIN_TILES;
+  const maxMapX = Math.max(...gameData.userSettlements.map((x) => x.x)) + MAP_MARGIN_TILES + 1;
+  const minMapY = Math.min(...gameData.userSettlements.map((x) => x.y)) - MAP_MARGIN_TILES - 1;
+  const maxMapY = Math.max(...gameData.userSettlements.map((x) => x.y)) + MAP_MARGIN_TILES;
   const startingTile = { x: minMapX, y: maxMapY };
 
   const mapStyle = {
@@ -85,6 +87,14 @@ const GameMap = ({
             key={x.x + "," + x.y}
             selectedSettlement={selectedSettlement}
             setSelectedSettlement={setSelectedSettlement}
+            startingTile={startingTile}
+          />
+        ))}
+        {movements.map((x) => (
+          <MovingTroop
+            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
+            data={x}
+            key={x.id}
             startingTile={startingTile}
           />
         ))}

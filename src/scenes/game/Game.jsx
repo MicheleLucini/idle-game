@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import moment from "moment";
 
-import { UpgradeSettlement, MoveTroops } from "../../api/user";
+import { GetUserData, UpgradeSettlement, MoveTroops } from "../../api/user";
 
 import Button from "../../components/button";
 import { delLocal } from "../../logic/storage";
@@ -8,16 +9,33 @@ import { delLocal } from "../../logic/storage";
 import GameMap from './GameMap.jsx';
 import "./game.css";
 
-const TILE_DIMENSIONS_PX = 60;
+const FRAME_RATE = 20;
 const MAP_MARGIN_TILES = 20;
+const TILE_DIMENSIONS_PX = 60;
+
+const mapMovement = (movement, gameData) => {
+  const clientDelta = Math.abs(moment().diff(gameData.serverDate, "ms"));
+  const travelTotal = moment(movement.arrivalDate).diff(movement.departureDate, "ms");
+  const travelRemaining = moment(movement.arrivalDate).diff(gameData.serverDate, "ms") - clientDelta;
+  const travelPtc = 100 - (travelRemaining * 100 / travelTotal);
+  return {
+    ...movement,
+    travelTotal,
+    travelRemaining,
+    travelPtc,
+  };
+};
 
 const Game = ({
   addToastMessage,
   gameData,
+  mapGameData,
   onLogout,
 }) => {
-  const [selectedSettlement, setSelectedSettlement] = useState(null);
   const [modalMoveTroops, setModalMoveTroops] = useState(null);
+  const [movements, setMovements] = useState([]);
+  const [refresh, setRefresh] = useState(0);
+  const [selectedSettlement, setSelectedSettlement] = useState(null);
 
   const onLogoutClick = () => {
     delLocal("user", "token");
@@ -38,9 +56,24 @@ const Game = ({
       destinationY: selectedSettlement.y,
       amount: fromSettlement.troopAmount,
     }, addToastMessage)
-      .then(() => setModalMoveTroops(null))
+      .then(() => {
+        GetUserData({ userId: gameData.id }, addToastMessage)
+          .then((data) => {
+            mapGameData(data);
+            setModalMoveTroops(null);
+          });
+      })
       .catch(() => { });
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => setRefresh(prev => prev + 1), 1000 / FRAME_RATE);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setMovements(gameData.userTroops.map((x) => mapMovement(x, gameData)));
+  }, [gameData, refresh])
 
   return (
     <div id="game">
@@ -48,6 +81,7 @@ const Game = ({
         MAP_MARGIN_TILES={MAP_MARGIN_TILES}
         TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
         gameData={gameData}
+        movements={movements}
         selectedSettlement={selectedSettlement}
         setSelectedSettlement={setSelectedSettlement}
       />
