@@ -4,8 +4,8 @@ import Settlement from "./Settlement.jsx";
 import "./gameMap.css";
 
 const GameMap = ({
+  MAP_MARGIN_TILES,
   TILE_DIMENSIONS_PX,
-  MAP_DIAMETER_TILES,
   gameData,
   selectedSettlement,
   setSelectedSettlement,
@@ -13,15 +13,18 @@ const GameMap = ({
   const containerRef = useRef(null);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
   const [scrollPosition, setScrollPosition] = useState({ x: 0, y: 0 });
+  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
-  const mapStyle = () => {
-    const mapSide = TILE_DIMENSIONS_PX * (MAP_DIAMETER_TILES * 2 + 1);
-    return {
-      height: mapSide + "px",
-      width: mapSide + "px",
-    };
+  const minMapX = Math.min(gameData.userSettlements.map((x) => x.x)) - MAP_MARGIN_TILES;
+  const maxMapX = Math.max(gameData.userSettlements.map((x) => x.x)) + MAP_MARGIN_TILES + 1;
+  const minMapY = Math.min(gameData.userSettlements.map((x) => x.y)) - MAP_MARGIN_TILES - 1;
+  const maxMapY = Math.max(gameData.userSettlements.map((x) => x.y)) + MAP_MARGIN_TILES;
+  const startingTile = { x: minMapX, y: maxMapY };
+
+  const mapStyle = {
+    height: ((maxMapY - minMapY) * TILE_DIMENSIONS_PX) + "px",
+    width: ((maxMapX - minMapX) * TILE_DIMENSIONS_PX) + "px",
   };
 
   const handleMouseDown = (event) => {
@@ -45,49 +48,44 @@ const GameMap = ({
   };
 
   useEffect(() => {
-    const startingTile = {
-      x: MAP_DIAMETER_TILES * -1,
-      y: MAP_DIAMETER_TILES,
-    };
+    const tileOffset = TILE_DIMENSIONS_PX / 2;
     const firstSettlement = gameData.userSettlements[0];
-    containerRef.current.scrollTop = ((startingTile.y - firstSettlement.y) * TILE_DIMENSIONS_PX) - (window.innerHeight / 2);
-    containerRef.current.scrollLeft = (((startingTile.x + (firstSettlement.x * -1)) * TILE_DIMENSIONS_PX) * -1) - (window.innerWidth / 2);
+    const windowHeightOffset = window.innerHeight / 2;
+    const windowWidthOffset = window.innerWidth / 2;
+    const firstSettlemetTop = (startingTile.y - firstSettlement.y) * TILE_DIMENSIONS_PX;
+    const firstSettlemetLeft = (firstSettlement.x - startingTile.x) * TILE_DIMENSIONS_PX;
+    containerRef.current.scrollTop = firstSettlemetTop - windowHeightOffset + tileOffset;
+    containerRef.current.scrollLeft = firstSettlemetLeft - windowWidthOffset + tileOffset;
   }, []);
 
   return (
     <div
       id="gameMap"
-      ref={containerRef}
       onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseUp}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      ref={containerRef}
     >
-      <div id="map" style={mapStyle()}>
-        <div style={{
-          position: "absolute",
-          top: (MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX) + "px",
-          left: (MAP_DIAMETER_TILES * TILE_DIMENSIONS_PX) + "px",
-          height: TILE_DIMENSIONS_PX + "px",
-          width: TILE_DIMENSIONS_PX + "px",
-          backgroundColor: "grey",
-        }} />
+      <div id="map" style={mapStyle}>
         {gameData.userSettlements.map((x) => (
           <Settlement
-            MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
-            key={x.x + "," + x.y} data={x}
+            data={x}
+            key={x.x + "," + x.y}
             selectedSettlement={selectedSettlement}
             setSelectedSettlement={setSelectedSettlement}
+            startingTile={startingTile}
           />
         ))}
         {gameData.visibleSettlements.map((x) => (
           <Settlement
-            MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
-            key={x.x + "," + x.y} data={x}
+            data={x}
+            key={x.x + "," + x.y}
             selectedSettlement={selectedSettlement}
             setSelectedSettlement={setSelectedSettlement}
+            startingTile={startingTile}
           />
         ))}
       </div>

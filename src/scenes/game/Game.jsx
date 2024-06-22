@@ -9,7 +9,7 @@ import GameMap from './GameMap.jsx';
 import "./game.css";
 
 const TILE_DIMENSIONS_PX = 60;
-const MAP_DIAMETER_TILES = 100;
+const MAP_MARGIN_TILES = 20;
 
 const Game = ({
   addToastMessage,
@@ -43,8 +43,8 @@ const Game = ({
   return (
     <div id="game">
       <GameMap
+        MAP_MARGIN_TILES={MAP_MARGIN_TILES}
         TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
-        MAP_DIAMETER_TILES={MAP_DIAMETER_TILES}
         gameData={gameData}
         selectedSettlement={selectedSettlement}
         setSelectedSettlement={setSelectedSettlement}
@@ -52,10 +52,10 @@ const Game = ({
       <div id="user_data">
         <span>{JSON.stringify(gameData, null, 2)}</span>
         <Button
-          text="Logout"
           icon="close"
           onClick={onLogoutClick}
           size="small"
+          text="Logout"
         />
       </div>
       {selectedSettlement && (
