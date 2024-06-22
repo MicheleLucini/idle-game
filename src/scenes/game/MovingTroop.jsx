@@ -23,8 +23,8 @@ const MovingTroop = ({
     <div
       style={{
         position: "absolute",
-        top: startingPositionTop + positionTopDelta,
-        left: startingPositionLeft + positionLeftDelta,
+        top: startingPositionTop - positionTopDelta,
+        left: startingPositionLeft - positionLeftDelta,
         height: 30,
         width: 30,
         marginTop: -15,

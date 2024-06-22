@@ -17,7 +17,7 @@ const mapMovement = (movement, gameData) => {
   const clientDelta = Math.abs(moment().diff(gameData.serverDate, "ms"));
   const travelTotal = moment(movement.arrivalDate).diff(movement.departureDate, "ms");
   const travelRemaining = moment(movement.arrivalDate).diff(gameData.serverDate, "ms") - clientDelta;
-  const travelPtc = 100 - (travelRemaining * 100 / travelTotal);
+  const travelPtc = Math.min(100 - (travelRemaining * 100 / travelTotal), 100);
   return {
     ...movement,
     travelTotal,
@@ -29,8 +29,8 @@ const mapMovement = (movement, gameData) => {
 const Game = ({
   addToastMessage,
   gameData,
-  mapGameData,
   onLogout,
+  refreshGameData,
 }) => {
   const [modalMoveTroops, setModalMoveTroops] = useState(null);
   const [movements, setMovements] = useState([]);
@@ -57,11 +57,8 @@ const Game = ({
       amount: fromSettlement.troopAmount,
     }, addToastMessage)
       .then(() => {
-        GetUserData({ userId: gameData.id }, addToastMessage)
-          .then((data) => {
-            mapGameData(data);
-            setModalMoveTroops(null);
-          });
+        setModalMoveTroops(null);
+        refreshGameData(gameData.id);
       })
       .catch(() => { });
   };
@@ -72,7 +69,16 @@ const Game = ({
   }, []);
 
   useEffect(() => {
-    setMovements(gameData.userTroops.map((x) => mapMovement(x, gameData)));
+    const newMovements = [
+      ...gameData.userTroops.map((x) => ({ ...mapMovement(x, gameData), isMine: true })),
+      ...gameData.visibleTroops.map((x) => mapMovement(x, gameData)),
+    ];
+
+    if (newMovements.some((x) => x.travelPtc === 100)) {
+      refreshGameData(gameData.id);
+    }
+
+    setMovements(newMovements);
   }, [gameData, refresh])
 
   return (
@@ -90,7 +96,8 @@ const Game = ({
         <span>{"ID: " + gameData.id}</span>
         <span>{"Email: " + gameData.email}</span>
         <span>{"Currency: " + gameData.gameCurrency}</span>
-        <span>{"Total troops: " + gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0)}</span>
+        <span>{"Troops in settlements: " + gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0)}</span>
+        <span>{"Troops moving: " + gameData.userTroops.map((x) => x.amount).reduce((acc, x) => acc + x, 0)}</span>
         {selectedSettlement && (
           <>
             <hr></hr>

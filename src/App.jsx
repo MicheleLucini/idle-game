@@ -13,14 +13,24 @@ import "./App.css";
 
 const App = () => {
   const [gameData, setGameData] = useState(null);
+  const [refreshingGameData, setRefreshingGameData] = useState(false);
 
   const mapGameData = (data) => {
     const mappedData = {
       ...data,
       userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true }),)
     };
-    console.log(mappedData)
     setGameData(mappedData);
+  };
+
+  const refreshGameData = (userId) => {
+    if (refreshingGameData) return;
+    setRefreshingGameData(true);
+    GetUserData({ userId }, addToastMessage)
+      .then((data) => {
+        mapGameData(data);
+        setRefreshingGameData(false);
+      });
   };
 
   const onLogout = () => {
@@ -60,7 +70,7 @@ const App = () => {
           addToastMessage={addToastMessage}
           gameData={gameData}
           onLogout={onLogout}
-          mapGameData={mapGameData}
+          refreshGameData={refreshGameData}
         />
       )}
 
