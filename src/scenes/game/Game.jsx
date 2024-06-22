@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-import { GetUserData, UpgradeSettlement, MoveTroops } from "../../api/user";
+import { UpgradeSettlement, MoveTroops } from "../../api/user";
 
 import Button from "../../components/button";
 import { delLocal } from "../../logic/storage";
@@ -14,14 +14,23 @@ const MAP_MARGIN_TILES = 20;
 const TILE_DIMENSIONS_PX = 60;
 
 const mapMovement = (movement, gameData) => {
-  const clientDelta = Math.abs(moment().diff(gameData.serverDate, "ms"));
-  const travelTotal = moment(movement.arrivalDate).diff(movement.departureDate, "ms");
-  const travelRemaining = moment(movement.arrivalDate).diff(gameData.serverDate, "ms") - clientDelta;
-  const travelPtc = Math.min(100 - (travelRemaining * 100 / travelTotal), 100);
+  // Calcolo del delta tra server e client in millisecondi
+  const serverMoment = moment(gameData.serverDate);
+  const clientMoment = moment(gameData.clientDate);
+  const deltaServerClient = clientMoment.diff(serverMoment);
+  // Calcolo della durata totale del movimento in millisecondi
+  const arrivalMoment = moment(movement.arrivalDate);
+  const departureMoment = moment(movement.departureDate);
+  const movementDuration = arrivalMoment.diff(departureMoment);
+  // Calcolo del tempo rimanente per il client
+  const currentClientTime = moment();
+  const synchronizedClientTime = currentClientTime.subtract(deltaServerClient, 'milliseconds');
+  const remainingClientTime = arrivalMoment.diff(synchronizedClientTime);
+  const travelPtc = Math.min(100 - (remainingClientTime * 100 / movementDuration), 100);
   return {
     ...movement,
-    travelTotal,
-    travelRemaining,
+    travelTotal: movementDuration,
+    travelRemaining: remainingClientTime,
     travelPtc,
   };
 };
@@ -54,7 +63,7 @@ const Game = ({
       sourceY: fromSettlement.y,
       destinationX: selectedSettlement.x,
       destinationY: selectedSettlement.y,
-      amount: fromSettlement.troopAmount,
+      amount: 1,//fromSettlement.troopAmount,
     }, addToastMessage)
       .then(() => {
         setModalMoveTroops(null);
@@ -111,7 +120,7 @@ const Game = ({
               text="Upgrade"
             />
             <Button
-              icon="east"
+              icon={selectedSettlement.isMine ? "tactic" : "swords"}
               onClick={() => setModalMoveTroops({})}
               size="small"
               text={selectedSettlement.isMine ? "Move troops" : "Attack"}
@@ -129,6 +138,7 @@ const Game = ({
             <h3>Move troops</h3>
             {gameData.userSettlements.map((x) => (
               <Button
+                key={x.x + "/" + x.y}
                 onClick={() => onMoveTroopsClick(x)}
                 size="small"
                 text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}

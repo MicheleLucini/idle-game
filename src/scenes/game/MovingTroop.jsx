@@ -13,18 +13,17 @@ const MovingTroop = ({
   const endingPositionTop = fromTileToPx(startingTile.y - data.destinationy);
   const endingPositionLeft = fromTileToPx(data.destinationX - startingTile.x);
 
-  const positionTopDiff = startingPositionTop - endingPositionTop;
-  const positionLeftDiff = startingPositionLeft - endingPositionLeft;
+  const elapsedTime = data.travelTotal - data.travelRemaining;
 
-  const positionTopDelta = positionTopDiff * data.travelPtc / 100;
-  const positionLeftDelta = positionLeftDiff * data.travelPtc / 100;
+  const currentTop = startingPositionTop + (elapsedTime / data.travelTotal) * (endingPositionTop - startingPositionTop);
+  const currentLeft = startingPositionLeft + (elapsedTime / data.travelTotal) * (endingPositionLeft - startingPositionLeft);
 
   return (
     <div
       style={{
         position: "absolute",
-        top: startingPositionTop - positionTopDelta,
-        left: startingPositionLeft - positionLeftDelta,
+        top: currentTop,
+        left: currentLeft,
         height: 30,
         width: 30,
         marginTop: -15,

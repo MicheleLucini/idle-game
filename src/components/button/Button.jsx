@@ -19,7 +19,7 @@ const Button = ({ id, text, icon, onClick, disabled, size }) => {
 
   return (
     <button id={id} className={buttonClassName} type="button" onClick={onClick}>
-      {icon && <span className="material-icons-round">{icon}</span>}
+      {icon && <span className="material-symbols-rounded">{icon}</span>}
       {text && text}
     </button>
   );

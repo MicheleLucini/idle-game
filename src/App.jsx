@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import moment from "moment";
+
+import { GetUserData } from "./api/user";
 
 import Background from "./scenes/background";
 import Access from "./scenes/access";
@@ -18,7 +21,8 @@ const App = () => {
   const mapGameData = (data) => {
     const mappedData = {
       ...data,
-      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true }),)
+      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true }),),
+      clientDate: moment().format(),
     };
     setGameData(mappedData);
   };
