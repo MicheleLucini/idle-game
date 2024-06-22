@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/idle-game/static/css/main.1a19f2d6.css",
-    "main.js": "/idle-game/static/js/main.295a867b.js",
+    "main.js": "/idle-game/static/js/main.8c2ea8fb.js",
     "index.html": "/idle-game/index.html",
     "main.1a19f2d6.css.map": "/idle-game/static/css/main.1a19f2d6.css.map",
-    "main.295a867b.js.map": "/idle-game/static/js/main.295a867b.js.map"
+    "main.8c2ea8fb.js.map": "/idle-game/static/js/main.8c2ea8fb.js.map"
   },
   "entrypoints": [
     "static/css/main.1a19f2d6.css",
-    "static/js/main.295a867b.js"
+    "static/js/main.8c2ea8fb.js"
   ]
 }
