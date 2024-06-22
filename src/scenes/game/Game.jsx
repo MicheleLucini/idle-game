@@ -29,6 +29,17 @@ const Game = ({
       .catch(() => { });
   };
 
+  const onMoveTroopsClick = () => {
+    // MoveTroops({
+    //   sourceX,
+    //   sourceY,
+    //   destinationX,
+    //   destinationY,
+    //   amount,
+    // }, addToastMessage)
+    //   .catch(() => { });
+  };
+
   return (
     <div id="game">
       <GameMap
@@ -58,9 +69,9 @@ const Game = ({
             text="Upgrade"
           />
           <Button
-            // onClick={onLogout}
             disabled={!selectedSettlement.isMine}
             icon="east"
+            onClick={onMoveTroopsClick}
             size="small"
             text="Move troops"
           />
