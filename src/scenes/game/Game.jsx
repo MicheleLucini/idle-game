@@ -38,6 +38,7 @@ const Game = ({
       destinationY: selectedSettlement.y,
       amount: fromSettlement.troopAmount,
     }, addToastMessage)
+      .then(() => setModalMoveTroops(null))
       .catch(() => { });
   };
 
@@ -50,8 +51,58 @@ const Game = ({
         selectedSettlement={selectedSettlement}
         setSelectedSettlement={setSelectedSettlement}
       />
-      <div id="user_data">
-        <span>{JSON.stringify(gameData, null, 2)}</span>
+      <div id="side_bar">
+        <h3>User</h3>
+        <span>{"ID: " + gameData.id}</span>
+        <span>{"Email: " + gameData.email}</span>
+        <span>{"Currency: " + gameData.gameCurrency}</span>
+        <span>{"Total troops: " + gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0)}</span>
+        {selectedSettlement && (
+          <>
+            <hr></hr>
+            <h3>Selected settlement</h3>
+            <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+            <Button
+              disabled={!selectedSettlement.isMine}
+              icon="upgrade"
+              onClick={onUpgradeClick}
+              size="small"
+              text="Upgrade"
+            />
+            <Button
+              icon="east"
+              onClick={() => setModalMoveTroops({})}
+              size="small"
+              text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+            />
+            <Button
+              icon="close"
+              onClick={() => { setSelectedSettlement(null); setModalMoveTroops(null) }}
+              size="small"
+            />
+          </>
+        )}
+        {modalMoveTroops && (
+          <>
+            <hr></hr>
+            <h3>Move troops</h3>
+            {gameData.userSettlements.map((x) => (
+              <Button
+                onClick={() => onMoveTroopsClick(x)}
+                size="small"
+                text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
+              />
+            ))}
+            <Button
+              icon="close"
+              onClick={() => setModalMoveTroops(null)}
+              size="small"
+              text="Cancel"
+            />
+          </>
+        )}
+      </div>
+      <div style={{ position: "absolute", top: "1.3rem", right: "1.3rem" }}>
         <Button
           icon="close"
           onClick={onLogoutClick}
@@ -59,47 +110,6 @@ const Game = ({
           text="Logout"
         />
       </div>
-      {selectedSettlement && (
-        <div id="selected_settlement">
-          <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
-          <Button
-            disabled={!selectedSettlement.isMine}
-            icon="upgrade"
-            onClick={onUpgradeClick}
-            size="small"
-            text="Upgrade"
-          />
-          <Button
-            icon="east"
-            onClick={() => setModalMoveTroops({})}
-            size="small"
-            text={selectedSettlement.isMine ? "Move troops" : "Attack"}
-          />
-          <Button
-            icon="close"
-            onClick={() => setSelectedSettlement(null)}
-            size="small"
-          />
-        </div>
-      )}
-      {modalMoveTroops && (
-        <div id="modal_move_troops">
-          <h3>Move troops</h3>
-          {gameData.userSettlements.map((x) => (
-            <Button
-              onClick={() => onMoveTroopsClick(x)}
-              size="small"
-              text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
-            />
-          ))}
-          <Button
-            icon="close"
-            onClick={() => setModalMoveTroops(null)}
-            size="small"
-            text="Cancel"
-          />
-        </div>
-      )}
     </div>
   );
 };
