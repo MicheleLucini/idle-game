@@ -5,7 +5,7 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: #263238;
+  /* background-color: #263238; */
 }
 
 #map {
@@ -31,9 +31,12 @@
     80px 80px,
     80px 80px,
     80px 80px; */
-  background:
+  /* background:
     linear-gradient(90deg, transparent 58px, black 58px) 0 0,
     linear-gradient(transparent 58px, black 58px) 0 0,
     white;
+  background-size: 60px 60px; */
+  background-image: linear-gradient(to right, #ddd 1px, transparent 1px),
+    linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 60px 60px;
 }

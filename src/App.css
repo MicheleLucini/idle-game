@@ -1,9 +1,4 @@
-:root {
-  --card-black: #3b3f62;
-  --card-red: #c63949;
-  --card-gold: #c0a465;
-  --card-back: #dcc599;
-}
+:root {}
 
 /* iframe {
   display: none;
@@ -49,6 +44,7 @@ label {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  box-sizing: border-box;
 }
 
 .selectable {

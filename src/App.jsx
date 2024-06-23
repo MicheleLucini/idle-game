@@ -27,14 +27,13 @@ const App = () => {
     setGameData(mappedData);
   };
 
-  const refreshGameData = (userId) => {
+  const refreshGameData = () => {
     if (refreshingGameData) return;
-    setRefreshingGameData(true);
-    GetUserData({ userId }, addToastMessage)
+    GetUserData({ userId: gameData.id }, addToastMessage)
       .then((data) => {
         mapGameData(data);
-        setRefreshingGameData(false);
-      });
+      })
+      .finally(() => setRefreshingGameData(false));
   };
 
   const onLogout = () => {

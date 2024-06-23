@@ -25,7 +25,7 @@ const mapMovement = (movement, gameData) => {
   // Calcolo del tempo rimanente per il client
   const currentClientTime = moment();
   const synchronizedClientTime = currentClientTime.subtract(deltaServerClient, 'milliseconds');
-  const remainingClientTime = arrivalMoment.diff(synchronizedClientTime);
+  const remainingClientTime = Math.max(arrivalMoment.diff(synchronizedClientTime), 0);
   const travelPtc = Math.min(100 - (remainingClientTime * 100 / movementDuration), 100);
   return {
     ...movement,
@@ -43,6 +43,7 @@ const Game = ({
 }) => {
   const [modalMoveTroops, setModalMoveTroops] = useState(null);
   const [movements, setMovements] = useState([]);
+  const [movementsFinished, setMovementsFinished] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [selectedSettlement, setSelectedSettlement] = useState(null);
 
@@ -67,7 +68,7 @@ const Game = ({
     }, addToastMessage)
       .then(() => {
         setModalMoveTroops(null);
-        refreshGameData(gameData.id);
+        refreshGameData();
       })
       .catch(() => { });
   };
@@ -82,13 +83,9 @@ const Game = ({
       ...gameData.userTroops.map((x) => ({ ...mapMovement(x, gameData), isMine: true })),
       ...gameData.visibleTroops.map((x) => mapMovement(x, gameData)),
     ];
-
-    if (newMovements.some((x) => x.travelPtc === 100)) {
-      refreshGameData(gameData.id);
-    }
-
+    setMovementsFinished(newMovements.some((x) => x.travelPtc === 100));
     setMovements(newMovements);
-  }, [gameData, refresh])
+  }, [gameData, refresh]);
 
   return (
     <div id="game">
@@ -112,24 +109,27 @@ const Game = ({
             <hr></hr>
             <h3>Selected settlement</h3>
             <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
-            <Button
-              disabled={!selectedSettlement.isMine}
-              icon="upgrade"
-              onClick={onUpgradeClick}
-              size="small"
-              text="Upgrade"
-            />
-            <Button
-              icon={selectedSettlement.isMine ? "tactic" : "swords"}
-              onClick={() => setModalMoveTroops({})}
-              size="small"
-              text={selectedSettlement.isMine ? "Move troops" : "Attack"}
-            />
-            <Button
-              icon="close"
-              onClick={() => { setSelectedSettlement(null); setModalMoveTroops(null) }}
-              size="small"
-            />
+            <div style={{ display: "grid", gridAutoFlow: "column", justifyContent: "start", gap: 7 }}>
+              {selectedSettlement.isMine && (
+                <Button
+                  icon="upgrade"
+                  onClick={onUpgradeClick}
+                  size="small"
+                  text="Upgrade"
+                />
+              )}
+              <Button
+                icon={selectedSettlement.isMine ? "tactic" : "swords"}
+                onClick={() => setModalMoveTroops({})}
+                size="small"
+                text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+              />
+              <Button
+                icon="close"
+                onClick={() => { setSelectedSettlement(null); setModalMoveTroops(null) }}
+                size="small"
+              />
+            </div>
           </>
         )}
         {modalMoveTroops && (
@@ -152,14 +152,14 @@ const Game = ({
             />
           </>
         )}
-      </div>
-      <div style={{ position: "absolute", top: "1.3rem", right: "1.3rem" }}>
-        <Button
-          icon="close"
-          onClick={onLogoutClick}
-          size="small"
-          text="Logout"
-        />
+        <div style={{ position: "absolute", top: 8, right: 8 }}>
+          <Button
+            icon="close"
+            onClick={onLogoutClick}
+            size="small"
+            text="Logout"
+          />
+        </div>
       </div>
     </div>
   );
