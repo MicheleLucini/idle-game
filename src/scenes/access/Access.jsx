@@ -65,6 +65,7 @@ const Access = ({
 
   return (
     <div id="access">
+      <h1>Penitent Realms</h1>
       <TextInput
         label="Email"
         value={email}
