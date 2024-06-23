@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import moment from "moment";
+import _ from "lodash";
 
 import { GetUserData } from "./api/user";
 
@@ -21,20 +22,26 @@ const App = () => {
   const mapGameData = (data) => {
     const mappedData = {
       ...data,
-      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true }),),
+      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true })),
       clientDate: moment().format(),
     };
     setGameData(mappedData);
   };
 
-  const refreshGameData = () => {
-    if (refreshingGameData) return;
+  const refreshGameData = useCallback(() => {
+    if (refreshingGameData || !gameData) return;
+    setRefreshingGameData(true);
     GetUserData({ userId: gameData.id }, addToastMessage)
-      .then((data) => {
-        mapGameData(data);
-      })
+      .then((data) => mapGameData(data))
       .finally(() => setRefreshingGameData(false));
-  };
+  }, [refreshingGameData, gameData]);
+
+  const throttledRefreshGameData = useCallback(_.throttle(refreshGameData, 1000), [refreshGameData]);
+
+  useEffect(() => {
+    const intervalId = setInterval(throttledRefreshGameData, 1000);
+    return () => clearInterval(intervalId);
+  }, [throttledRefreshGameData]);
 
   const onLogout = () => {
     setGameData(null);

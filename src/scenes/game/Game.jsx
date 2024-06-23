@@ -39,7 +39,6 @@ const Game = ({
   addToastMessage,
   gameData,
   onLogout,
-  refreshGameData,
 }) => {
   const [modalMoveTroops, setModalMoveTroops] = useState(null);
   const [movements, setMovements] = useState([]);
@@ -66,10 +65,7 @@ const Game = ({
       destinationY: selectedSettlement.y,
       amount: 1,//fromSettlement.troopAmount,
     }, addToastMessage)
-      .then(() => {
-        setModalMoveTroops(null);
-        refreshGameData();
-      })
+      .then(() => setModalMoveTroops(null))
       .catch(() => { });
   };
 
