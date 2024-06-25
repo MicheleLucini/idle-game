@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 
+import EmptyCell from "./EmptyCell.jsx";
 import MovingTroop from "./MovingTroop.jsx";
 import Settlement from "./Settlement.jsx";
 import "./gameMap.css";
@@ -7,6 +8,7 @@ import "./gameMap.css";
 const GameMap = ({
   MAP_MARGIN_TILES,
   TILE_DIMENSIONS_PX,
+  VISIBILITY_RADIUS,
   gameData,
   movements,
   selectedSettlement,
@@ -49,6 +51,46 @@ const GameMap = ({
     setIsDragging(false);
   };
 
+  // Funzione per calcolare la distanza euclidea al quadrato tra due punti
+  const euclideanDistanceSquared = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
+
+  // Funzione per trovare tutte le celle a distanza <= d da (x0, y0)
+  const findCellsAtMaxDistance = (x0, y0, d) => {
+    const dSquared = d ** 2;
+    let cells = [];
+
+    // Iteriamo su tutte le possibili coordinate nell'intervallo [-d, d]
+    for (let dx = -d; dx <= d; dx++) {
+      for (let dy = -d; dy <= d; dy++) {
+        const x = x0 + dx;
+        const y = y0 + dy;
+        if (euclideanDistanceSquared(x0, y0, x, y) <= dSquared) {
+          cells.push({ x, y });
+        }
+      }
+    }
+
+    return cells;
+  };
+
+  // Funzione per trovare tutte le celle visibili da un array di villaggi
+  const visibleCells = useMemo(() => {
+    const visibleCellsSet = new Set();
+    gameData.userSettlements.forEach((settlement) => {
+      const cells = findCellsAtMaxDistance(settlement.x, settlement.y, VISIBILITY_RADIUS);
+      cells.forEach(cell => {
+        const key = `${cell.x},${cell.y}`;
+        visibleCellsSet.add(key);
+      });
+    });
+    // Convertiamo il set in un array di oggetti { x, y }
+    const visibleCells = Array.from(visibleCellsSet).map((key) => {
+      const [x, y] = key.split(',').map(Number);
+      return { x, y };
+    });
+    return visibleCells;
+  }, [gameData.userSettlements, VISIBILITY_RADIUS]);
+
   useEffect(() => {
     const tileOffset = TILE_DIMENSIONS_PX / 2;
     const firstSettlement = gameData.userSettlements[0];
@@ -70,6 +112,14 @@ const GameMap = ({
       ref={containerRef}
     >
       <div id="map" style={mapStyle}>
+        {visibleCells.map((x) => (
+          <EmptyCell
+            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
+            data={x}
+            key={x.x + "," + x.y}
+            startingTile={startingTile}
+          />
+        ))}
         {gameData.userSettlements.map((x) => (
           <Settlement
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}

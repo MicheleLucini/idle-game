@@ -10,7 +10,7 @@ const MovingTroop = ({
   const startingPositionTop = fromTileToPx(startingTile.y - data.sourceY);
   const startingPositionLeft = fromTileToPx(data.sourceX - startingTile.x);
 
-  const endingPositionTop = fromTileToPx(startingTile.y - data.destinationy);
+  const endingPositionTop = fromTileToPx(startingTile.y - data.destinationY);
   const endingPositionLeft = fromTileToPx(data.destinationX - startingTile.x);
 
   const deltaX = endingPositionLeft - startingPositionLeft;
