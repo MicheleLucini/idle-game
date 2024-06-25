@@ -4,6 +4,7 @@ import moment from "moment";
 import { UpgradeSettlement, MoveTroops } from "../../api/user";
 
 import Button from "../../components/button";
+import RangeInput from "../../components/rangeInput";
 import { delLocal } from "../../logic/storage";
 
 import GameMap from './GameMap.jsx';
@@ -43,7 +44,6 @@ const Game = ({
 }) => {
   const [modalMoveTroops, setModalMoveTroops] = useState(null);
   const [movements, setMovements] = useState([]);
-  const [movementsFinished, setMovementsFinished] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [selectedSettlement, setSelectedSettlement] = useState(null);
 
@@ -58,15 +58,18 @@ const Game = ({
       .catch(() => { });
   };
 
-  const onMoveTroopsClick = (fromSettlement) => {
+  const onMoveTroopsClick = () => {
     MoveTroops({
-      sourceX: fromSettlement.x,
-      sourceY: fromSettlement.y,
+      sourceX: modalMoveTroops.x,
+      sourceY: modalMoveTroops.y,
       destinationX: selectedSettlement.x,
       destinationY: selectedSettlement.y,
-      amount: 1,//fromSettlement.troopAmount,
+      amount: modalMoveTroops.amount,
     }, addToastMessage)
-      .then(() => setModalMoveTroops(null))
+      .then(() => {
+        setModalMoveTroops(null);
+        setSelectedSettlement(null);
+      })
       .catch(() => { });
   };
 
@@ -76,12 +79,10 @@ const Game = ({
   }, []);
 
   useEffect(() => {
-    const newMovements = [
+    setMovements([
       ...gameData.userTroops.map((x) => ({ ...mapMovement(x, gameData), isMine: true })),
       ...gameData.visibleTroops.map((x) => mapMovement(x, gameData)),
-    ];
-    setMovementsFinished(newMovements.some((x) => x.travelPtc === 100));
-    setMovements(newMovements);
+    ]);
   }, [gameData, refresh]);
 
   return (
@@ -130,18 +131,40 @@ const Game = ({
             </div>
           </>
         )}
-        {modalMoveTroops && (
+        {modalMoveTroops && !modalMoveTroops.level && (
           <>
             <hr></hr>
             <h3>Move troops</h3>
             {gameData.userSettlements.map((x) => (
               <Button
                 key={x.x + "/" + x.y}
-                onClick={() => onMoveTroopsClick(x)}
+                onClick={() => setModalMoveTroops(x)}
                 size="small"
                 text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
               />
             ))}
+            <Button
+              icon="close"
+              onClick={() => setModalMoveTroops(null)}
+              size="small"
+              text="Cancel"
+            />
+          </>
+        )}
+        {modalMoveTroops && modalMoveTroops.level && (
+          <>
+            <hr></hr>
+            <h3>Troops amount</h3>
+            <RangeInput
+              value={modalMoveTroops.amount || 0}
+              setValue={(amount) => setModalMoveTroops((prev) => ({ ...prev, amount }))}
+              max={modalMoveTroops.troopAmount}
+            />
+            <Button
+              onClick={onMoveTroopsClick}
+              size="small"
+              text="Confirm"
+            />
             <Button
               icon="close"
               onClick={() => setModalMoveTroops(null)}

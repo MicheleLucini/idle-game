@@ -9,10 +9,10 @@ const ToastMessageContainer = ({ messages }) => {
       {messages?.map((message, i) => (
         <div key={i} className={"toast-message " + message.type}>
           {message.type === "error" && (
-            <span className="icon material-icons-round">priority_high</span>
+            <span className="icon material-symbols-rounded">priority_high</span>
           )}
           {message.type === "success" && (
-            <span className="icon material-icons-round">check</span>
+            <span className="icon material-symbols-rounded">check</span>
           )}
           <span className="text">{message.text}</span>
         </div>
