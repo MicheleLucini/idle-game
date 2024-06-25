@@ -11,9 +11,9 @@ import GameMap from './GameMap.jsx';
 import "./game.css";
 
 const FRAME_RATE = 20;
-const MAP_MARGIN_TILES = 18;
+const MAP_MARGIN_TILES = 12;
 const TILE_DIMENSIONS_PX = 60;
-const VISIBILITY_RADIUS = 16;
+const VISIBILITY_RADIUS = 10;
 
 const mapMovement = (movement, gameData) => {
   // Calcolo del delta tra server e client in millisecondi

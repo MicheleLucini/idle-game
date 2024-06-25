@@ -74,22 +74,42 @@ const GameMap = ({
   };
 
   // Funzione per trovare tutte le celle visibili da un array di villaggi
-  const visibleCells = useMemo(() => {
+  const findVisibleCells = (villages, visibilityRadius) => {
     const visibleCellsSet = new Set();
-    gameData.userSettlements.forEach((settlement) => {
-      const cells = findCellsAtMaxDistance(settlement.x, settlement.y, VISIBILITY_RADIUS);
+    villages.forEach(village => {
+      const cells = findCellsAtMaxDistance(village.x, village.y, visibilityRadius);
       cells.forEach(cell => {
         const key = `${cell.x},${cell.y}`;
         visibleCellsSet.add(key);
       });
     });
-    // Convertiamo il set in un array di oggetti { x, y }
-    const visibleCells = Array.from(visibleCellsSet).map((key) => {
-      const [x, y] = key.split(',').map(Number);
-      return { x, y };
+    return visibleCellsSet;
+  };
+
+  // Funzione per trovare tutte le celle nella mappa
+  const findAllCellsInMap = (xMin, yMin, xMax, yMax) => {
+    const cells = [];
+    for (let x = xMin; x <= xMax; x++) {
+      for (let y = yMin; y <= yMax; y++) {
+        cells.push({ x, y });
+      }
+    }
+    return cells;
+  };
+
+  // Funzione per trovare le celle non visibili
+  const nonVisibleCells = useMemo(() => {
+    const visibleCellsSet = findVisibleCells(gameData.userSettlements, VISIBILITY_RADIUS);
+    const allCells = findAllCellsInMap(minMapX, minMapY, maxMapX, maxMapY);
+    const nonVisibleCells = [];
+    allCells.forEach(cell => {
+      const key = `${cell.x},${cell.y}`;
+      if (!visibleCellsSet.has(key)) {
+        nonVisibleCells.push(cell);
+      }
     });
-    return visibleCells;
-  }, [gameData.userSettlements, VISIBILITY_RADIUS]);
+    return nonVisibleCells;
+  }, [gameData.userSettlements, minMapX, minMapY, maxMapX, maxMapY]);
 
   useEffect(() => {
     const tileOffset = TILE_DIMENSIONS_PX / 2;
@@ -112,7 +132,7 @@ const GameMap = ({
       ref={containerRef}
     >
       <div id="map" style={mapStyle}>
-        {visibleCells.map((x) => (
+        {nonVisibleCells.map((x) => (
           <EmptyCell
             TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             data={x}
