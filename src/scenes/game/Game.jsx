@@ -6,6 +6,7 @@ import { UpgradeSettlement, MoveTroops } from "../../api/user";
 import Button from "../../components/button";
 import RangeInput from "../../components/rangeInput";
 import { delLocal } from "../../logic/storage";
+import { formatBigNumber } from "../../logic/utility.js";
 
 import GameMap from './GameMap.jsx';
 import "./game.css";
@@ -100,9 +101,9 @@ const Game = ({
         <h3>User</h3>
         <span>{"ID: " + gameData.id}</span>
         <span>{"Email: " + gameData.email}</span>
-        <span>{"Currency: " + gameData.gameCurrency}</span>
-        <span>{"Troops in settlements: " + gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0)}</span>
-        <span>{"Troops moving: " + gameData.userTroops.map((x) => x.amount).reduce((acc, x) => acc + x, 0)}</span>
+        <span>{"Currency: " + formatBigNumber(gameData.gameCurrency)}</span>
+        <span>{"Troops in settlements: " + formatBigNumber(gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0))}</span>
+        <span>{"Troops moving: " + formatBigNumber(gameData.userTroops.map((x) => x.amount).reduce((acc, x) => acc + x, 0))}</span>
         {selectedSettlement && (
           <>
             <hr></hr>
