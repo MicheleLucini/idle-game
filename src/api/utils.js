@@ -11,6 +11,10 @@ var MESSAGE_TYPE = {
   ERROR: 4
 };
 
+function responseIsNetworkError(response) {
+  return response?.code === "ERR_NETWORK";
+}
+
 function responseIsHttpError500(response) {
   return response?.status === 500;
 }
@@ -43,7 +47,11 @@ export async function post(url, body = {}, addToastMessage) {
       timeout: DEFAULT_TIMEOUT,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    if (responseIsNetworkError(error)) {
+      if (addToastMessage) addToastMessage("error", "Network error");
+      throw error;
+    }
     if (responseIsHttpError500(error.response)) {
       if (addToastMessage) addToastMessage("error", "Something went wrong. " + error.response);
       throw error;
