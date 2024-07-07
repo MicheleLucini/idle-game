@@ -1,4 +1,5 @@
 import React from "react";
+import { formatBigNumber } from "../../logic/utility";
 
 const Settlement = ({
   TILE_DIMENSIONS_PX,
@@ -31,7 +32,7 @@ const Settlement = ({
     >
       <b>{data.x + "/" + data.y}</b>
       <small>{data.level}</small>
-      {data.isMine && <small>{data.troopAmount}</small>}
+      {data.isMine && <small>{formatBigNumber(data.troopAmount)}</small>}
     </div>
   );
 };
