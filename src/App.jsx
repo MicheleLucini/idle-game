@@ -19,14 +19,14 @@ const App = () => {
   const [gameData, setGameData] = useState(null);
   const [refreshingGameData, setRefreshingGameData] = useState(false);
 
-  const mapGameData = (data) => {
+  const mapGameData = useCallback((data) => {
     const mappedData = {
       ...data,
       userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true })),
       clientDate: moment().format(),
     };
     setGameData(mappedData);
-  };
+  }, []);
 
   const refreshGameData = useCallback(() => {
     if (refreshingGameData || !gameData) return;
