@@ -7,10 +7,10 @@ export const uuidv4 = () => {
 };
 
 export function formatBigNumber(number) {
-  if(number > 1e6)
-    return (number/1e6).toFixed(1) + "M"
-  if(number > 1e3)
-    return (number/1e3).toFixed(1) + "K"
+  if (number > 1e6)
+    return (number / 1e6).toFixed(1) + "M"
+  if (number > 1e3)
+    return (number / 1e3).toFixed(1) + "K"
   return number;
 }
 
@@ -35,14 +35,14 @@ export function getSettlementHourlyRecruitment(currentLevel) {
   return baseProduction * currentLevel;
 }
 
-export function getSettlementUpgradeCost(currentLevel){
+export function getSettlementUpgradeCost(currentLevel) {
   const baseCost = 50;
   const multiplier = 1.15;
   return baseCost * Math.pow(multiplier, currentLevel);
 }
 
-export function distance(sourceX, sourceY, sourceX, sourceY) {
-  return Math.sqrt(Math.pow(sourceY - sourceY, 2) + Math.pow(sourceX - sourceX, 2));
+export function distance(sourceX, sourceY, destinationX, destinationY) {
+  return Math.sqrt(Math.pow(sourceX - sourceY, 2) + Math.pow(destinationX - destinationY, 2));
 }
 
 export function calculateTroopTravelTime(sourceX, sourceY, destinationX, destinationY, troopAmount) {
