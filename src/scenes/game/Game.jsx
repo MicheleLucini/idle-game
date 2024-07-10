@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import moment from "moment";
+import React, { createContext, useState, useEffect } from "react";
 
 import { UpgradeSettlement, MoveTroops } from "../../api/user";
 
@@ -18,6 +17,8 @@ import {
   VISIBILITY_RADIUS,
   mapMovement,
 } from './game.logic.js'
+
+export const GameContext = createContext({});
 
 const Game = ({
   addToastMessage,
@@ -67,104 +68,109 @@ const Game = ({
     ]);
   }, [gameData, refresh]);
 
+  const contextValue = {
+    FRAME_RATE,
+    MAP_MARGIN_TILES,
+    TILE_DIMENSIONS_PX,
+    VISIBILITY_RADIUS,
+    gameData,
+    movements,
+    selectedSettlement,
+    setSelectedSettlement,
+  };
+
   return (
-    <div id="game">
-      <GameMap
-        MAP_MARGIN_TILES={MAP_MARGIN_TILES}
-        TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
-        VISIBILITY_RADIUS={VISIBILITY_RADIUS}
-        gameData={gameData}
-        movements={movements}
-        selectedSettlement={selectedSettlement}
-        setSelectedSettlement={setSelectedSettlement}
-      />
-      <div id="side_bar">
-        <h3>User</h3>
-        <span>{"ID: " + gameData.id}</span>
-        <span>{"Email: " + gameData.email}</span>
-        <span>{"Currency: " + formatBigNumber(gameData.gameCurrency)}</span>
-        <span>{"Troops in settlements: " + formatBigNumber(gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0))}</span>
-        <span>{"Troops moving: " + formatBigNumber(gameData.userTroops.map((x) => x.amount).reduce((acc, x) => acc + x, 0))}</span>
-        {selectedSettlement && (
-          <>
-            <hr></hr>
-            <h3>Selected settlement</h3>
-            <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
-            <div style={{ display: "grid", gridAutoFlow: "column", justifyContent: "start", gap: 7 }}>
-              {selectedSettlement.isMine && (
+    <GameContext.Provider value={contextValue}>
+      <div id="game">
+        <GameMap />
+        <div id="side_bar">
+          <h3>User</h3>
+          <span>{"ID: " + gameData.id}</span>
+          <span>{"Email: " + gameData.email}</span>
+          <span>{"Currency: " + formatBigNumber(gameData.gameCurrency)}</span>
+          <span>{"Troops in settlements: " + formatBigNumber(gameData.userSettlements.map((x) => x.troopAmount).reduce((acc, x) => acc + x, 0))}</span>
+          <span>{"Troops moving: " + formatBigNumber(gameData.userTroops.map((x) => x.amount).reduce((acc, x) => acc + x, 0))}</span>
+          {selectedSettlement && (
+            <>
+              <hr></hr>
+              <h3>Selected settlement</h3>
+              <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+              <div style={{ display: "grid", gridAutoFlow: "column", justifyContent: "start", gap: 7 }}>
+                {selectedSettlement.isMine && (
+                  <Button
+                    icon="upgrade"
+                    onClick={onUpgradeClick}
+                    size="small"
+                    text="Upgrade"
+                  />
+                )}
                 <Button
-                  icon="upgrade"
-                  onClick={onUpgradeClick}
+                  icon={selectedSettlement.isMine ? "tactic" : "swords"}
+                  onClick={() => setModalMoveTroops({})}
                   size="small"
-                  text="Upgrade"
+                  text={selectedSettlement.isMine ? "Move troops" : "Attack"}
                 />
-              )}
+                <Button
+                  icon="close"
+                  onClick={() => { setSelectedSettlement(null); setModalMoveTroops(null) }}
+                  size="small"
+                />
+              </div>
+            </>
+          )}
+          {modalMoveTroops && !modalMoveTroops.level && (
+            <>
+              <hr></hr>
+              <h3>Move troops</h3>
+              {gameData.userSettlements.map((x) => (
+                <Button
+                  key={x.x + "/" + x.y}
+                  onClick={() => setModalMoveTroops(x)}
+                  size="small"
+                  text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
+                />
+              ))}
               <Button
-                icon={selectedSettlement.isMine ? "tactic" : "swords"}
-                onClick={() => setModalMoveTroops({})}
+                icon="close"
+                onClick={() => setModalMoveTroops(null)}
                 size="small"
-                text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+                text="Cancel"
+              />
+            </>
+          )}
+          {modalMoveTroops && modalMoveTroops.level && (
+            <>
+              <hr></hr>
+              <h3>Troops amount</h3>
+              <RangeInput
+                value={modalMoveTroops.amount || 0}
+                setValue={(amount) => setModalMoveTroops((prev) => ({ ...prev, amount }))}
+                max={modalMoveTroops.troopAmount}
+              />
+              <Button
+                onClick={onMoveTroopsClick}
+                size="small"
+                text="Confirm"
               />
               <Button
                 icon="close"
-                onClick={() => { setSelectedSettlement(null); setModalMoveTroops(null) }}
+                onClick={() => setModalMoveTroops(null)}
                 size="small"
+                text="Cancel"
               />
-            </div>
-          </>
-        )}
-        {modalMoveTroops && !modalMoveTroops.level && (
-          <>
-            <hr></hr>
-            <h3>Move troops</h3>
-            {gameData.userSettlements.map((x) => (
-              <Button
-                key={x.x + "/" + x.y}
-                onClick={() => setModalMoveTroops(x)}
-                size="small"
-                text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
-              />
-            ))}
+            </>
+          )}
+          <div style={{ position: "absolute", top: 8, right: 8 }}>
             <Button
               icon="close"
-              onClick={() => setModalMoveTroops(null)}
+              onClick={onLogoutClick}
               size="small"
-              text="Cancel"
+              text="Logout"
             />
-          </>
-        )}
-        {modalMoveTroops && modalMoveTroops.level && (
-          <>
-            <hr></hr>
-            <h3>Troops amount</h3>
-            <RangeInput
-              value={modalMoveTroops.amount || 0}
-              setValue={(amount) => setModalMoveTroops((prev) => ({ ...prev, amount }))}
-              max={modalMoveTroops.troopAmount}
-            />
-            <Button
-              onClick={onMoveTroopsClick}
-              size="small"
-              text="Confirm"
-            />
-            <Button
-              icon="close"
-              onClick={() => setModalMoveTroops(null)}
-              size="small"
-              text="Cancel"
-            />
-          </>
-        )}
-        <div style={{ position: "absolute", top: 8, right: 8 }}>
-          <Button
-            icon="close"
-            onClick={onLogoutClick}
-            size="small"
-            text="Logout"
-          />
+          </div>
         </div>
       </div>
-    </div>
+    </GameContext.Provider>
   );
 };
 

@@ -1,19 +1,21 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useContext, useRef, useState, useMemo, useEffect } from "react";
+
+import { GameContext } from '../Game.jsx';
 
 import EmptyCell from "./EmptyCell.jsx";
-import MovingTroop from "./MovingTroop.jsx";
-import Settlement from "./Settlement.jsx";
+import MovingTroop from "../MovingTroop.jsx";
+import Settlement from "./settlement/Settlement.jsx";
 import "./gameMap.css";
 
-const GameMap = ({
-  MAP_MARGIN_TILES,
-  TILE_DIMENSIONS_PX,
-  VISIBILITY_RADIUS,
-  gameData,
-  movements,
-  selectedSettlement,
-  setSelectedSettlement,
-}) => {
+const GameMap = ({ }) => {
+  const {
+    MAP_MARGIN_TILES,
+    TILE_DIMENSIONS_PX,
+    VISIBILITY_RADIUS,
+    gameData,
+    movements,
+  } = useContext(GameContext);
+
   const containerRef = useRef(null);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -26,10 +28,10 @@ const GameMap = ({
   const maxMapY = Math.max(...gameData.userSettlements.map((x) => x.y)) + MAP_MARGIN_TILES;
   const startingTile = { x: minMapX, y: maxMapY };
 
-  const mapStyle = {
+  const mapStyle = useMemo(() => ({
     height: ((maxMapY - minMapY) * TILE_DIMENSIONS_PX) + "px",
     width: ((maxMapX - minMapX) * TILE_DIMENSIONS_PX) + "px",
-  };
+  }), [TILE_DIMENSIONS_PX, maxMapY, maxMapX, minMapY, minMapX]);
 
   const handleMouseDown = (event) => {
     const e = event || window.event;
@@ -134,7 +136,6 @@ const GameMap = ({
       <div id="map" style={mapStyle}>
         {nonVisibleCells.map((x) => (
           <EmptyCell
-            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             data={x}
             key={x.x + "," + x.y}
             startingTile={startingTile}
@@ -142,27 +143,20 @@ const GameMap = ({
         ))}
         {gameData.userSettlements.map((x) => (
           <Settlement
-            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             data={x}
             key={x.x + "," + x.y}
-            selectedSettlement={selectedSettlement}
-            setSelectedSettlement={setSelectedSettlement}
             startingTile={startingTile}
           />
         ))}
         {gameData.visibleSettlements.map((x) => (
           <Settlement
-            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             data={x}
             key={x.x + "," + x.y}
-            selectedSettlement={selectedSettlement}
-            setSelectedSettlement={setSelectedSettlement}
             startingTile={startingTile}
           />
         ))}
         {movements.map((x) => (
           <MovingTroop
-            TILE_DIMENSIONS_PX={TILE_DIMENSIONS_PX}
             data={x}
             key={x.id}
             startingTile={startingTile}

@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GameContext } from '../Game';
 
 const EmptyCell = ({
-  TILE_DIMENSIONS_PX,
   data,
   startingTile,
 }) => {
+  const {
+    TILE_DIMENSIONS_PX,
+  } = useContext(GameContext);
   return (
     <div
+      className='empty-cell'
       style={{
-        position: "absolute",
         top: (startingTile.y - data.y) * TILE_DIMENSIONS_PX,
         left: (data.x - startingTile.x) * TILE_DIMENSIONS_PX,
         height: TILE_DIMENSIONS_PX,
         width: TILE_DIMENSIONS_PX,
-        backgroundColor: "#ddd",
       }}
     >
     </div>

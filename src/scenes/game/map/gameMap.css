@@ -14,3 +14,17 @@
     linear-gradient(to bottom, #ddd 1px, transparent 1px);
   background-size: 60px 60px;
 }
+
+.empty-cell {
+  position: absolute;
+  background-color: #ddd;
+}
+
+.settlement {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  margin-top: 1px;
+  margin-left: 1px;
+}
