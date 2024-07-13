@@ -53,6 +53,26 @@ const GameMap = ({ }) => {
     setIsDragging(false);
   };
 
+  const handleTouchStart = (event) => {
+    const e = event.touches[0];
+    setIsDragging(true);
+    setStartPosition({ x: e.clientX, y: e.clientY });
+    setScrollPosition({ x: containerRef.current.scrollLeft, y: containerRef.current.scrollTop });
+  };
+
+  const handleTouchMove = (event) => {
+    if (!isDragging) return;
+    const e = event.touches[0];
+    const dx = e.clientX - startPosition.x;
+    const dy = e.clientY - startPosition.y;
+    containerRef.current.scrollLeft = scrollPosition.x - dx;
+    containerRef.current.scrollTop = scrollPosition.y - dy;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   // Funzione per calcolare la distanza euclidea al quadrato tra due punti
   const euclideanDistanceSquared = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
 
@@ -131,6 +151,9 @@ const GameMap = ({ }) => {
       onMouseLeave={handleMouseUp}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
       ref={containerRef}
     >
       <div id="map" style={mapStyle}>
