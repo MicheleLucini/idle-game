@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import moment from "moment";
 import _ from "lodash";
 
@@ -11,7 +11,7 @@ import Game from "./scenes/game";
 import ToastMessageContainer from "./components/toastMessage";
 import { Cursor } from "./components/cursor";
 
-import { uuidv4 } from "./logic/utility";
+import { uuidv4, isMobile } from "./logic/utility";
 
 import "./App.css";
 
@@ -19,13 +19,17 @@ const App = () => {
   const [gameData, setGameData] = useState(null);
   const [refreshingGameData, setRefreshingGameData] = useState(false);
 
+  const isDeviceMobile = useMemo(() => isMobile(), []);
+
   const mapGameData = useCallback((data) => {
-    const mappedData = {
-      ...data,
-      userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true })),
-      clientDate: moment().format(),
-    };
-    setGameData(mappedData);
+    if (data) {
+      const mappedData = {
+        ...data,
+        userSettlements: data.userSettlements.map((x) => ({ ...x, isMine: true })),
+        clientDate: moment().format(),
+      };
+      setGameData(mappedData);
+    }
   }, []);
 
   const refreshGameData = useCallback(() => {
@@ -85,8 +89,7 @@ const App = () => {
       )}
 
       <ToastMessageContainer messages={toastMessages} />
-
-      <Cursor />
+      {!isDeviceMobile && <Cursor />}
     </>
   );
 };

@@ -6,6 +6,10 @@ export const uuidv4 = () => {
   });
 };
 
+export const isMobile = () => {
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
 export function formatBigNumber(number) {
   if (number > 1e6)
     return (number / 1e6).toFixed(1) + "M"

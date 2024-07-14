@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getLocal } from "../logic/storage";
 
-export const BASE_URL = "https://penitentrealms.zapto.org";
+export const BASE_URL = "https://penitentrealms.simply-winspace.it";
 const DEFAULT_TIMEOUT = 30000;
 
 var MESSAGE_TYPE = {
