@@ -18,31 +18,59 @@ export function formatBigNumber(number) {
   return number;
 }
 
-export function calculateTroopPower(troopAmount, defenseLevel) {
+export function calculateTroopPower(troopAmount, settlementLevel) {
   const baseExponent = 1.1;
-  const defenseExponent = 1.1;
-  const baseDefensePerLevel = 100;
-  var extraTroops = Math.pow(defenseLevel, defenseExponent) * baseDefensePerLevel;
+  var extraTroops = getGarrison(settlementLevel);
   var totalTroops = troopAmount + extraTroops;
-  var totalPower = Math.pow(totalTroops, baseExponent) * (defenseLevel / 100.0);
+  var totalPower = Math.pow(totalTroops, baseExponent) * getWalls(settlementLevel);
   return totalPower;
 }
 
-export function getSettlementHourlyProduction(currentLevel) {
+export function calculateTroopPowerGain(troopAmount, settlementLevel) {
+  return calculateTroopPower(troopAmount, settlementLevel + 1) - calculateTroopPower(troopAmount, settlementLevel);
+}
+
+export function getGarrison(settlementLevel) {
+  const baseDefensePerLevel = 100;
+  const defenseExponent = 1.1;
+  return Math.pow(settlementLevel, defenseExponent) * baseDefensePerLevel;
+}
+
+export function getGarrisonGain(settlementLevel) {
+  return getGarrison(settlementLevel + 1) - getGarrison(settlementLevel)
+}
+
+export function getWalls(settlementLevel) {
+  return settlementLevel / 100.0;
+}
+
+export function getWallsGain(settlementLevel) {
+  return getWalls(settlementLevel + 1) - getWalls(settlementLevel);
+}
+
+export function getMoneyProduction(settlementLevel) {
   const baseProduction = 100;
   const multiplier = 1.10;
-  return baseProduction * Math.pow(multiplier, currentLevel);
+  return baseProduction * Math.pow(multiplier, settlementLevel);
 }
 
-export function getSettlementHourlyRecruitment(currentLevel) {
+export function getMoneyProductionGain(settlementLevel) {
+  return getMoneyProduction(settlementLevel + 1) - getMoneyProduction(settlementLevel + 1);
+}
+
+export function getTroopProduction(settlementLevel) {
   const baseProduction = 5;
-  return baseProduction * currentLevel;
+  return baseProduction * settlementLevel;
 }
 
-export function getSettlementUpgradeCost(currentLevel) {
+export function getTroopProductionGain(settlementLevel) {
+  return getTroopProduction(settlementLevel + 1) - getTroopProduction(settlementLevel)
+}
+
+export function getUpgradeCost(settlementLevel) {
   const baseCost = 50;
   const multiplier = 1.15;
-  return baseCost * Math.pow(multiplier, currentLevel);
+  return baseCost * Math.pow(multiplier, settlementLevel);
 }
 
 export function distance(sourceX, sourceY, destinationX, destinationY) {
