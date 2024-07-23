@@ -48,6 +48,7 @@ const App = () => {
   }, [throttledRefreshGameData]);
 
   const onLogout = () => {
+    delLocal("user", "token");
     setGameData(null);
   };
 

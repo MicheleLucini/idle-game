@@ -15,6 +15,7 @@ const Access = ({
   addToastMessage,
   mapGameData,
 }) => {
+  const [autoLogin, setAutoLogin] = useState(true);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,42 +56,50 @@ const Access = ({
   useEffect(() => {
     const userToken = getLocal("user", "token");
     if (!userToken) {
+      setAutoLogin(false);
       setLoading(false);
       return;
     }
     RestoreSignIn(addToastMessage)
       .then((data) => mapGameData(data))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setAutoLogin(false);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <div id="access">
       <h1>Penitent Realms</h1>
-      <TextInput
-        label="Email"
-        value={email}
-        setValue={setEmail}
-        disabled={loading}
-      />
-      <TextInput
-        label="Password"
-        value={password}
-        setValue={setPassword}
-        disabled={loading}
-        type="password"
-      />
-      <Button
-        text="Login"
-        icon="login"
-        onClick={onSignIn}
-        disabled={loading}
-      />
-      <Button
-        text="Register"
-        icon="person_add"
-        onClick={onRegister}
-        disabled={loading}
-      />
+      {!autoLogin && (
+        <>
+          <TextInput
+            label="Email"
+            value={email}
+            setValue={setEmail}
+            disabled={loading}
+          />
+          <TextInput
+            label="Password"
+            value={password}
+            setValue={setPassword}
+            disabled={loading}
+            type="password"
+          />
+          <Button
+            text="Login"
+            icon="login"
+            onClick={onSignIn}
+            disabled={loading}
+          />
+          <Button
+            text="Register"
+            icon="person_add"
+            onClick={onRegister}
+            disabled={loading}
+          />
+        </>
+      )}
       <span className="version">{appVersion}</span>
     </div>
   );
