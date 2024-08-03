@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GameContext } from '../Game.jsx';
 
 const MovingTroop = ({
-  TILE_DIMENSIONS_PX,
   data,
   startingTile,
 }) => {
+  const {
+    TILE_DIMENSIONS_PX,
+  } = useContext(GameContext);
+
   const fromTileToPx = (tileNumber) => tileNumber * TILE_DIMENSIONS_PX + (TILE_DIMENSIONS_PX / 2);
 
   const startingPositionTop = fromTileToPx(startingTile.y - data.sourceY);

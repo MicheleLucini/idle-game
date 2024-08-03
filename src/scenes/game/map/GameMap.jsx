@@ -3,7 +3,7 @@ import React, { useContext, useRef, useState, useMemo, useEffect } from "react";
 import { GameContext } from '../Game.jsx';
 
 import EmptyCell from "./EmptyCell.jsx";
-import MovingTroop from "../MovingTroop.jsx";
+import MovingTroop from "./MovingTroop.jsx";
 import Settlement from "./settlement/Settlement.jsx";
 import "./gameMap.css";
 

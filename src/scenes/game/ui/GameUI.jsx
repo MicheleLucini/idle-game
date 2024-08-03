@@ -34,7 +34,7 @@ const GameUI = ({ }) => {
     }
     if (selectedSettlement) return SIDEBARVIEW.SETTLEMENT;
     return SIDEBARVIEW.NONE;
-  }, [modeMoveTroops, selectedSettlement?.isMine])
+  }, [modeMoveTroops, selectedSettlement])
 
 
   const reset = () => {
