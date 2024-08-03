@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "homepage": "https://michelelucini.github.io/idle-game",
+  "imports": {
+    "#*": "./src/*"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

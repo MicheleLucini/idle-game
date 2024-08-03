@@ -1,8 +1,9 @@
 import React, { createContext, useState, useMemo, useEffect } from "react";
 
+import { UpgradeSettlement, MoveTroops } from "#api/user";
+
 import GameMap from './map/GameMap.jsx';
 import GameUI from './ui/GameUI.jsx';
-
 import "./game.css";
 import {
   FRAME_RATE,
@@ -33,16 +34,15 @@ const Game = ({
       .catch(() => { });
   };
 
-  const onMoveTroops = () => {
+  const onMoveTroops = ({ x, y, amount }) => {
     MoveTroops({
-      sourceX: modalMoveTroops.x,
-      sourceY: modalMoveTroops.y,
+      sourceX: x,
+      sourceY: y,
       destinationX: selectedSettlement.x,
       destinationY: selectedSettlement.y,
-      amount: modalMoveTroops.amount,
+      amount: amount,
     }, addToastMessage)
       .then(() => {
-        setModalMoveTroops(null);
         setSelectedSettlement(null);
       })
       .catch(() => { });

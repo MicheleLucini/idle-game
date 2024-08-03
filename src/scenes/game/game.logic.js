@@ -1,5 +1,7 @@
+import moment from 'moment';
+
 export const FRAME_RATE = 20;
-export const MAP_MARGIN_TILES = 12;
+export const MAP_MARGIN_TILES = 20;
 export const TILE_DIMENSIONS_PX = 60;
 export const VISIBILITY_RADIUS = 10;
 

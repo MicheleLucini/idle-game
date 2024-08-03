@@ -2,16 +2,16 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import moment from "moment";
 import _ from "lodash";
 
-import { GetUserData } from "./api/user";
+import { GetUserData } from "#api/user";
 
-import Background from "./scenes/background";
-import Access from "./scenes/access";
-import Game from "./scenes/game";
+import Background from "#scenes/background";
+import Access from "#scenes/access";
+import Game from "#scenes/game";
 
-import ToastMessageContainer from "./components/toastMessage";
-import { Cursor } from "./components/cursor";
+import ToastMessageContainer from "#components/toastMessage";
+import { Cursor } from "#components/cursor";
 
-import { uuidv4, isMobile } from "./logic/utility";
+import { uuidv4, isMobile } from "#logic/utility";
 
 import "./App.css";
 

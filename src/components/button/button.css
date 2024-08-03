@@ -38,7 +38,8 @@
 }
 
 .simple-button.icon-only {
-  padding: 0 16px;
+  padding: 0;
+  aspect-ratio: 1;
 }
 
 .simple-button {

@@ -1,12 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState, useMemo } from "react";
 
-import Button from "../../../components/button";
-import RangeInput from "../../../components/rangeInput";
-import { formatBigNumber } from "../../../logic/utility.js";
+import Button from "#components/button";
+import RangeInput from "#components/rangeInput";
+import { formatBigNumber } from "#logic/utility.js";
 
 import { GameContext } from '../Game.jsx';
 
 import "./gameUI.css";
+
+const SIDEBARVIEW = {
+  NONE: "NONE",
+  SETTLEMENT: "SETTLEMENT",
+  MOVE_TROOPS: "MOVE_TROOPS",
+  ATTACK: "ATTACK",
+  TROOPS_AMOUNT: "TROOPS_AMOUNT",
+}
 
 const GameUI = ({ }) => {
   const {
@@ -19,6 +27,23 @@ const GameUI = ({ }) => {
 
   const [modeMoveTroops, setModeMoveTroops] = useState(null);
 
+  const currentView = useMemo(() => {
+    if (modeMoveTroops) {
+      if (modeMoveTroops.level) return SIDEBARVIEW.TROOPS_AMOUNT;
+      return selectedSettlement.isMine ? SIDEBARVIEW.MOVE_TROOPS : SIDEBARVIEW.ATTACK;
+    }
+    if (selectedSettlement) return SIDEBARVIEW.SETTLEMENT;
+    return SIDEBARVIEW.NONE;
+  }, [modeMoveTroops, selectedSettlement?.isMine])
+
+
+  const reset = () => {
+    setModeMoveTroops(null);
+    setSelectedSettlement(null);
+  };
+
+  console.log(currentView, selectedSettlement, modeMoveTroops)
+
   return (
     <>
       <div id="gameUI_user">
@@ -28,148 +53,160 @@ const GameUI = ({ }) => {
         </div>
       </div>
       <div id="gameUI_sideBar" className={!!selectedSettlement ? "open" : "close"}>
-        {selectedSettlement && (
-          !modeMoveTroops ? (
-            <>
-              <h3>{selectedSettlement.x + "/" + selectedSettlement.y}</h3>
-              <div className="info_block">
-                <div className="info_block_title">
-                  <h5>Settlement JSON</h5>
-                </div>
-                <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+        {currentView === SIDEBARVIEW.SETTLEMENT && (
+          <>
+            <h3>{selectedSettlement.x + "/" + selectedSettlement.y}</h3>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Settlement JSON</h5>
               </div>
-              <div className="info_block">
-                <div className="info_block_title">
-                  <h5>Defense</h5>
-                  <h5>552M</h5>
-                </div>
-                <span>Troops 97.8M</span>
-                <span>Garrison 194K/h (+21.0M)</span>
-                <span>Walls 237% (+3%)</span>
+              <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+            </div>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Defense</h5>
+                <h5>552M</h5>
               </div>
-              <div className="info_block">
-                <div className="info_block_title">
-                  <h5>Production</h5>
-                </div>
-                <span>Troops 194K/h (+22.3K)</span>
-                <span>Money 486K/h (+55.9K)</span>
+              <span>Troops 97.8M</span>
+              <span>Garrison 194K/h (+21.0M)</span>
+              <span>Walls 237% (+3%)</span>
+            </div>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Production</h5>
               </div>
-              <div className="actions">
-                {selectedSettlement.isMine && (
-                  <Button
-                    icon="upgrade"
-                    onClick={onUpgradeClick}
-                    size="small"
-                    text="Upgrade"
-                  />
-                )}
+              <span>Troops 194K/h (+22.3K)</span>
+              <span>Money 486K/h (+55.9K)</span>
+            </div>
+            <div className="actions">
+              {selectedSettlement.isMine && (
                 <Button
-                  icon={selectedSettlement.isMine ? "tactic" : "swords"}
-                  onClick={() => setModeMoveTroops({})}
+                  icon="upgrade"
+                  onClick={onUpgradeSettlement}
                   size="small"
-                  text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+                  text="Upgrade"
                 />
+              )}
+              <Button
+                icon={selectedSettlement.isMine ? "tactic" : "swords"}
+                onClick={() => setModeMoveTroops({})}
+                size="small"
+                text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+              />
+              <Button
+                icon="close"
+                onClick={reset}
+                size="small"
+              />
+            </div>
+          </>
+        )}
+        {currentView === SIDEBARVIEW.MOVE_TROOPS && (
+          <>
+            <h3>Move troops to settlement</h3>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Settlement JSON</h5>
+              </div>
+              <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+            </div>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Defense</h5>
+                <h5>552M</h5>
+              </div>
+              <span>Troops 97.8M</span>
+              <span>Garrison 194K/h (+21.0M)</span>
+              <span>Walls 237% (+3%)</span>
+            </div>
+            <div className="actions">
+              <Button
+                icon="upgrade"
+                onClick={onUpgradeSettlement}
+                size="small"
+                text="Upgrade"
+              />
+              <Button
+                icon="tactic"
+                onClick={() => setModeMoveTroops({})}
+                size="small"
+                text="Move troops"
+              />
+              <Button
+                icon="close"
+                onClick={reset}
+                size="small"
+              />
+            </div>
+          </>
+        )}
+        {currentView === SIDEBARVIEW.ATTACK && (
+          <>
+            <h3>Attack settlement</h3>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Settlement JSON</h5>
+              </div>
+              <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
+            </div>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Defense</h5>
+                <h5>552M</h5>
+              </div>
+              <span>Troops 97.8M</span>
+            </div>
+            <div className="info_block">
+              <div className="info_block_title">
+                <h5>Choose settlement that will attack</h5>
+                <h5>{gameData.userSettlements.length}</h5>
+              </div>
+              {gameData.userSettlements.map((x) => (
                 <Button
-                  icon="close"
-                  onClick={() => { setSelectedSettlement(null); setModeMoveTroops(null) }}
+                  key={x.x + "/" + x.y}
+                  onClick={() => setModeMoveTroops(x)}
                   size="small"
+                  text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
                 />
-              </div>
-            </>
-          ) : (
-            <>
-              <h3>{selectedSettlement.isMine ? "Move troops to settlement" : "Attack settlement"}</h3>
-              <div className="info_block">
-                <div className="info_block_title">
-                  <h5>Settlement JSON</h5>
-                </div>
-                <span>{JSON.stringify(selectedSettlement, null, 2)}</span>
-              </div>
-              <div className="info_block">
-                <div className="info_block_title">
-                  <h5>Defense</h5>
-                  <h5>552M</h5>
-                </div>
-                <span>Troops 97.8M</span>
-                <span>Garrison 194K/h (+21.0M)</span>
-                <span>Walls 237% (+3%)</span>
-              </div>
-              <div className="actions">
-                {selectedSettlement.isMine && (
-                  <Button
-                    icon="upgrade"
-                    onClick={onUpgradeClick}
-                    size="small"
-                    text="Upgrade"
-                  />
-                )}
-                <Button
-                  icon={selectedSettlement.isMine ? "tactic" : "swords"}
-                  onClick={() => setModeMoveTroops({})}
-                  size="small"
-                  text={selectedSettlement.isMine ? "Move troops" : "Attack"}
-                />
-                <Button
-                  icon="close"
-                  onClick={() => { setSelectedSettlement(null); setModeMoveTroops(null) }}
-                  size="small"
-                />
-              </div>
-            </>
-          )
+              ))}
+            </div>
+            <div className="actions">
+              <Button
+                icon="close"
+                onClick={reset}
+                size="small"
+                text="Cancel"
+              />
+            </div>
+          </>
+        )}
+        {currentView === SIDEBARVIEW.TROOPS_AMOUNT && (
+          <>
+            <hr></hr>
+            <h3>Troops amount</h3>
+            <RangeInput
+              value={modeMoveTroops.amount || 0}
+              setValue={(amount) => setModeMoveTroops((prev) => ({ ...prev, amount }))}
+              max={modeMoveTroops.troopAmount}
+            />
+            <Button
+              icon={selectedSettlement.isMine ? "tactic" : "swords"}
+              onClick={() => {
+                onMoveTroops(modeMoveTroops);
+                reset();
+              }}
+              size="small"
+              text={selectedSettlement.isMine ? "Move troops" : "Attack"}
+            />
+            <Button
+              icon="close"
+              onClick={reset}
+              size="small"
+              text="Cancel"
+            />
+          </>
         )}
       </div>
-      {/* {modeMoveTroops && !modeMoveTroops.level && (
-        <>
-          <hr></hr>
-          <h3>Move troops</h3>
-          {gameData.userSettlements.map((x) => (
-            <Button
-              key={x.x + "/" + x.y}
-              onClick={() => setModeMoveTroops(x)}
-              size="small"
-              text={x.x + "/" + x.y + " - Troops: " + x.troopAmount}
-            />
-          ))}
-          <Button
-            icon="close"
-            onClick={() => setModeMoveTroops(null)}
-            size="small"
-            text="Cancel"
-          />
-        </>
-      )}
-      {modeMoveTroops && modeMoveTroops.level && (
-        <>
-          <hr></hr>
-          <h3>Troops amount</h3>
-          <RangeInput
-            value={modeMoveTroops.amount || 0}
-            setValue={(amount) => setModeMoveTroops((prev) => ({ ...prev, amount }))}
-            max={modeMoveTroops.troopAmount}
-          />
-          <Button
-            onClick={onMoveTroopsClick}
-            size="small"
-            text="Confirm"
-          />
-          <Button
-            icon="close"
-            onClick={() => setModeMoveTroops(null)}
-            size="small"
-            text="Cancel"
-          />
-        </>
-      )}
-      <div style={{ position: "absolute", top: 8, right: 8 }}>
-        <Button
-          icon="close"
-          onClick={onLogoutClick}
-          size="small"
-          text="Logout"
-        />
-      </div>
-    </div >*/}
     </>
   );
 };
